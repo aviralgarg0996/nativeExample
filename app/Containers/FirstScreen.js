@@ -19,7 +19,7 @@ class FirstScreen extends Component {
             <View style={styles.mainView}>
             <Image
               style={styles.logo}
-              source={require('../images/slide1.png') }
+              source={require('../images/logo.png') }
             />
             <View style={styles.container}>
             <Text style={styles.textColor}>Enter Your Email</Text>
@@ -56,45 +56,49 @@ class FirstScreen extends Component {
                         alert("Enter Pass")
                         else
                         {
-                            try {
+                            this.props.navigator.push({
+                                            screen: 'example.SecondScreen',
+                                            title: 'User Details'
+                                          });
+                            // try {
                             
-                                firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pass).then(()=>{
-                                  //  user signed in
-                                    this.props.navigator.push({
-                                        screen: 'HomeScreen',
-                                        title: 'Home Page'
-                                      });
-                                   alert("signed In")
-                                 }).catch((error)=> {
-                                    // Handle Errors here.
-                                    var errorCode = error.code;
-                                    var errorMessage = error.message;
-                                    // ...
-                                    if (errorCode === 'auth/wrong-password') {
-                                        alert('Wrong password.');
-                                    } else {
-                                        alert(errorMessage);         
-                                    }
-                                  });
+                            //     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pass).then(()=>{
+                            //       //  user signed in
+                            //         this.props.navigator.push({
+                            //             screen: 'HomeScreen',
+                            //             title: 'Home Page'
+                            //           });
+                            //        alert("signed In")
+                            //      }).catch((error)=> {
+                            //         // Handle Errors here.
+                            //         var errorCode = error.code;
+                            //         var errorMessage = error.message;
+                            //         // ...
+                            //         if (errorCode === 'auth/wrong-password') {
+                            //             alert('Wrong password.');
+                            //         } else {
+                            //             alert(errorMessage);         
+                            //         }
+                            //       });
                                     
                             
-                                // Navigate to the Home page, the user is auto logged in
+                            //     // Navigate to the Home page, the user is auto logged in
                             
-                            } catch (error) {
-                                alert(error.toString())
-                            }
+                            // } catch (error) {
+                            //     alert(error.toString())
+                            // }
                         }
                      
                     }}
                     title="Login"
                 /> 
-                 <Text
+                 {/* <Text
                  style={{color:'white',marginTop:20}}
                  onPress={() => this.props.navigator.push({
                     screen: 'example.SecondScreen',
                     title: 'SignUp Page'
                   })}
-                 >Not an Account?Click here</Text>
+                 >Not an Account?Click here</Text> */}
                  </View>
                 </View>
           
@@ -111,8 +115,8 @@ const styles = StyleSheet.create({
     },
         logo:{
             
-            width:100,
-            height:100,
+            width:120,
+            height:120,
             marginBottom:30
      
         },

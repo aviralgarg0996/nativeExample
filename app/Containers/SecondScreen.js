@@ -1,17 +1,30 @@
 //import liraries
 import React, { Component } from "react";
-import { View, Text, StyleSheet,TextInput,Button,Image } from "react-native";
+import { View, Text, StyleSheet,TextInput,Button,Image ,ScrollView} from "react-native";
 import { connect } from "react-redux";
-import * as firebase from "firebase";
-
+import RadioGroup from 'react-native-radio-buttons-group';
 // create a component
 class SecondScreen extends Component {
   state={
     email:"",
-    pass:"",
-    confirmPass:"",
+    age:"",
     name:"",
-    mobile:""
+    mobile:"",
+    address:"",
+    sexData:[
+      {
+        label: 'Male',
+        value:'Male',
+        size: 30,
+        color:'green',
+      },
+      {
+        label: 'Female',
+        value:'Female',
+        size: 30,
+        color:'green',
+      }, 
+    ],
   }
   static navigatorStyle = {
     navBarBackgroundColor: "#63b342",
@@ -20,13 +33,14 @@ class SecondScreen extends Component {
   render() {
 
     return (
+      <ScrollView>
       <View style={styles.mainView}>
       <Image
         style={styles.logo}
-        source={require('../images/slide1.png') }
+        source={require('../images/logo.png') }
       />
       <View style={styles.container}>
-      <Text style={styles.textColor}>Enter Your Name</Text>
+      <Text style={styles.textColor}>Enter Name</Text>
       <TextInput 
       style={styles.inputStyle}
       placeholder='Name' 
@@ -37,7 +51,7 @@ class SecondScreen extends Component {
               name:text
           })
       }}/>
-      <Text style={styles.textColor}>Enter Your Email</Text>
+      <Text style={styles.textColor}>Enter Email</Text>
       <TextInput 
       style={styles.inputStyle}
       placeholder='Email' 
@@ -47,30 +61,6 @@ class SecondScreen extends Component {
       onChangeText={(text)=>{
           this.setState({
               email:text
-          })
-      }}/>
-        <Text style={styles.textColor}>Enter Your Password</Text>
-      <TextInput 
-      style={styles.inputStyle}
-      placeholder='Password' 
-      underlineColorAndroid="transparent"
-      secureTextEntry={true}
-      value={this.state.pass}
-      onChangeText={(text)=>{
-          this.setState({
-              pass:text
-          })
-      }}/>
-       <Text style={styles.textColor}>Confirm Password</Text>
-      <TextInput 
-      style={styles.inputStyle}
-      placeholder='Confirm Password' 
-      underlineColorAndroid="transparent"
-      secureTextEntry={true}
-      value={this.state.confirmPass}
-      onChangeText={(text)=>{
-          this.setState({
-              confirmPass:text
           })
       }}/>
       <Text style={styles.textColor}>Phone No</Text>
@@ -85,6 +75,41 @@ class SecondScreen extends Component {
               mobile:text
           })
       }}/>
+       <Text style={styles.textColor}>Address</Text>
+      <TextInput 
+      style={styles.inputStyle}
+      placeholder='Address' 
+      underlineColorAndroid="transparent"
+      password={true}
+      value={this.state.address}
+      onChangeText={(text)=>{
+          this.setState({
+              address:text
+          })
+      }}/>
+      
+  <Text style={styles.textColor}>Age</Text>
+      <TextInput 
+      keyboardType={'numeric'}
+      style={styles.inputStyle}
+      placeholder='Age' 
+      underlineColorAndroid="transparent"
+      value={this.state.age}
+      onChangeText={(text)=>{
+          this.setState({
+              age:text
+          })
+      }}/>
+
+       <View style={styles.rowstyle}>
+    <Text style={styles.inputtextStyle}>Sex:</Text>
+    <RadioGroup 
+    flexDirection='row'
+    radioButtons={this.state.sexData} onPress={(data)=>this.setState({
+     sexData:data
+   })} />
+  </View>
+ 
       <Button 
       style={{width:200}}
               onPress={()=>{
@@ -92,58 +117,26 @@ class SecondScreen extends Component {
                 alert("Enter Name");
                 else if(this.state.email=="")
                 alert("Enter Email")
-                else if(this.state.pass=="")
-                alert("Password Field Empty")
-                else if(this.state.confirmPass=="")
-                alert("Confirm Password Field Empty")
+                else if(this.state.address=="")
+                alert("Enter Address")
                 else if(this.state.mobile=="")
                 alert("Mobile No Field Empty")
-                else if(this.state.pass!=this.state.confirmPass)
-                {
-                  alert("Password not Match");
-                  this.setState({
-                    pass:"",
-                    confirmPass:""
-                  })
-                }
+              
                 else{
 
-                
-                  try {
-                       firebase.auth()
-                          .createUserWithEmailAndPassword(this.state.email, this.state.confirmPass).then(()=>{
-                            //  user signed in
-                              this.props.navigator.push({
-                                  screen: 'HomeScreen',
-                                  title: 'Home Page'
-                                });
-                             alert("User Created")
-                           }).catch(function(error) {
-                              // Handle Errors here.
-                              var errorCode = error.code;
-                              var errorMessage = error.message;
-                              // ...
-                               alert(errorMessage);         
-                              
-                            });
-                      // Navigate to the Home page, the user is auto logged in
-                  
-                  } catch (error) {
-                      alert(error.toString())
-                  }
+                  this.props.navigator.push({
+                    screen: 'HomeScreen',
+                    title: 'Survey'
+                  });
+                 
                 }
               }}
-              title="Sign Up"
+              title="Start Survey"
           /> 
-           <Text
-           style={{marginTop:10,color:'white'}}
-           onPress={() => this.props.navigator.push({
-            screen: 'example.FirstScreen',
-            title: 'Login Screen'
-          })}
-           >Already an Account?Click here</Text>
+         
            </View>
           </View>
+          </ScrollView>
     );
   }
 }
@@ -166,12 +159,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding:20,
-  backgroundColor:'#424242',
+  // backgroundColor:'#424242',
   width:'100%',
   height:'100%'
     },
     textColor:{
-      color:'white'
+      // color:'white'
   },
   inputStyle:{
     borderColor: 'gray',
@@ -181,7 +174,18 @@ const styles = StyleSheet.create({
      marginTop:5,
      marginBottom:20,
      paddingLeft:10,
-     color:'white'
+    //  color:'white'
+},
+rowstyle:{
+  flexDirection: 'row' ,
+  marginTop:5,
+  marginLeft:20,
+  marginBottom:20
+  // borderBottomWidth:0.5
+  
+},
+inputtextStyle:{
+  marginTop:10
 }
   })
 //make this component available to the app
