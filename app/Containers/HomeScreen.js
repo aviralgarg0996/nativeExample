@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet ,Button,Switch,TextInput,ScrollView,Picker} from "react-native";
 import { connect } from "react-redux";
-import * as firebase from "firebase"; 
 import RadioGroup from 'react-native-radio-buttons-group';
 // create a component
 class HomeScreen extends Component {

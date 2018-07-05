@@ -3,6 +3,9 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet,TextInput,Button,Image ,ScrollView} from "react-native";
 import { connect } from "react-redux";
 import RadioGroup from 'react-native-radio-buttons-group';
+import axios from "axios";
+import {basepath} from "../Utils/Constant"
+// import MapView from 'react-native-maps';
 // create a component
 class SecondScreen extends Component {
   state={
@@ -87,6 +90,14 @@ class SecondScreen extends Component {
               address:text
           })
       }}/>
+      {/* <MapView
+    initialRegion={{
+      latitude: 37.78825,
+      longitude: -122.4324,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    }}
+  /> */}
       
   <Text style={styles.textColor}>Age</Text>
       <TextInput 
@@ -123,12 +134,32 @@ class SecondScreen extends Component {
                 alert("Mobile No Field Empty")
               
                 else{
+                  axios({
+                    method: "post",
+                    url: basepath+"user/adduser",
+                    data: {
+                      userName:this.state.name,
+                      email:this.state.email,
+                      phoneNo:this.state.mobile,
+                      age:this.state.address,
+                      address:this.state.address,
+                      age:this.state.age,
+                      sex:this.state.sexData
 
-                  this.props.navigator.push({
-                    screen: 'HomeScreen',
-                    title: 'Survey'
-                  });
-                 
+                    },
+                  })
+                    .then(response => {
+                        console.log("response",response)
+                        this.props.navigator.push({
+                          screen: 'HomeScreen',
+                          title: 'Survey'
+                        });
+                       
+                    })
+                    .catch(error => {
+                      console.log("Error");
+                    })
+                  
                 }
               }}
               title="Start Survey"

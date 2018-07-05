@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet,TouchableOpacity ,Image,TextInput,Button} from 'react-native';
 import { connect } from "react-redux";
-import * as firebase from "firebase";
-
+import axios from "axios";
+import {basepath} from "../Utils/Constant"
 // create a component
 class FirstScreen extends Component {
     state = {
@@ -15,6 +15,8 @@ class FirstScreen extends Component {
          navBarTitleTextCentered: true,
       };
     render() {
+    console.log("basepath",basepath)
+        
         return (
             <View style={styles.mainView}>
             <Image
@@ -56,37 +58,25 @@ class FirstScreen extends Component {
                         alert("Enter Pass")
                         else
                         {
-                            this.props.navigator.push({
-                                            screen: 'example.SecondScreen',
-                                            title: 'User Details'
-                                          });
-                            // try {
-                            
-                            //     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pass).then(()=>{
-                            //       //  user signed in
-                            //         this.props.navigator.push({
-                            //             screen: 'HomeScreen',
-                            //             title: 'Home Page'
-                            //           });
-                            //        alert("signed In")
-                            //      }).catch((error)=> {
-                            //         // Handle Errors here.
-                            //         var errorCode = error.code;
-                            //         var errorMessage = error.message;
-                            //         // ...
-                            //         if (errorCode === 'auth/wrong-password') {
-                            //             alert('Wrong password.');
-                            //         } else {
-                            //             alert(errorMessage);         
-                            //         }
-                            //       });
-                                    
-                            
-                            //     // Navigate to the Home page, the user is auto logged in
-                            
-                            // } catch (error) {
-                            //     alert(error.toString())
-                            // }
+                            axios({
+                                method: "post",
+                                url: basepath+"employee/loginEmployee",
+                                data: {
+                                  userName:this.state.email,
+                                  password:this.state.pass
+                                },
+                              })
+                                .then(response => {
+                                    console.log("response",response)
+                                    this.props.navigator.push({
+                                        screen: 'example.SecondScreen',
+                                        title: 'User Details'
+                                      });
+                                })
+                                .catch(error => {
+                                  console.log("Error");
+                                })
+                           
                         }
                      
                     }}
