@@ -7,7 +7,7 @@ import ThanksScreen from "./ThanksScreen"
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
-  Navigation.registerComponent("example.FirstScreen", () => FirstScreen, store, Provider);
+  Navigation.registerComponent("example.FirstScreen", () => HomeScreen, store, Provider);
   Navigation.registerComponent("example.SecondScreen", () => SecondScreen, store, Provider);
   Navigation.registerComponent("HomeScreen",() => HomeScreen, store, Provider)
   Navigation.registerComponent("ThanksScreen",() => ThanksScreen,store,Provider)

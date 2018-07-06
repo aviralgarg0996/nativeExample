@@ -152,7 +152,8 @@ class SecondScreen extends Component {
                         console.log("response",response)
                         this.props.navigator.push({
                           screen: 'HomeScreen',
-                          title: 'Survey'
+                          title: 'Survey',
+                          
                         });
                        
                     })

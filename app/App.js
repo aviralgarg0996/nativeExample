@@ -16,13 +16,22 @@ registerScreens(store, Provider);
 
 // notice that this is just a simple class, it's not a React component
 export default class App {
-  
+  constructor() {
+    this.startApp()
+  }
   render(){
     return
       <View><Text>hello</Text></View>
       
-      
-    
   }
 
+startApp() { 
+Navigation.startSingleScreenApp({
+  screen: {
+    screen: "example.FirstScreen",
+    title: "Login",
+    navigatorStyle: {}
+  },
+});
+}
 }

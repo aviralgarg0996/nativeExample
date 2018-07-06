@@ -15,6 +15,8 @@ class HomeScreen extends Component {
     crowdChecked:false,
     seatChecked:false,
     safetyChecked:false,
+    nonpublicvisible:'none',
+    publictransportvisible:'none',
     otherResons:"",
     origin:"",
     destination:"",
@@ -26,6 +28,15 @@ class HomeScreen extends Component {
     ownedcars:"",
     ownedbike:"",
     ownedbicycle:"",
+    accessModeUsed:"",
+    accessDistance:"",
+    accessCost:"",
+    mainTripMode:"",
+    mainTripDistance:"",
+    mainTripCost:"",
+    egressTripMode:"",
+    egressTripDistance:"",
+    egressTripCost:"",
     travelTimeData: [
       {
         label: 'Saves lot of time',
@@ -250,6 +261,13 @@ if (this.state.travelMode!="") {
     return (
       <ScrollView>
       <View style={styles.container}>
+      <Text style={styles.headingStyle}> Have you used metro for your daily commute earlier?</Text>
+  <RadioGroup  
+  flexDirection='row'
+  radioButtons={this.state.dailyCommutedata} 
+  onPress={(data)=>this.setState({
+     dailyCommutedata:data
+   })} />
 <Text style={styles.headingStyle}>Reasons for not using metro?</Text>
 <View style={styles.rowstyle}>
 
@@ -377,7 +395,18 @@ onChangeText={(text) => this.setState({timeTaken:text})}
   <Picker
    selectedValue={this.state.travelMode}
   style={{  width: 200,marginLeft:20 ,marginTop:10}}
-  onValueChange={(itemValue, itemIndex) => this.setState({travelMode: itemValue}
+  onValueChange={
+    (itemValue, itemIndex) => itemValue=="public"?this.setState(
+      {
+        travelMode: itemValue,
+        nonpublicvisible:'none',
+        publictransportvisible:'flex'
+      }
+  ):this.setState( 
+    {travelMode: itemValue,
+    publictransportvisible:'none',
+    nonpublicvisible:'flex'
+    }
   )}
   >
   <Picker.Item label="Private" value="Private" />
@@ -389,8 +418,8 @@ onChangeText={(text) => this.setState({timeTaken:text})}
 
   </View>
   
-  <View style={styles.rowstyle}>
-  <Text style={styles.headingStyle}>{this.state.travelMode}</Text>
+  {/* <View style={styles.rowstyle}> */}
+  {/* <Text style={styles.headingStyle}>{this.state.travelMode}</Text> */}
   {/* <Picker
   display={this.state.travelMode==""?'none':'flex'}
   //  selectedValue={this.state.travelMode}
@@ -405,7 +434,7 @@ onChangeText={(text) => this.setState({timeTaken:text})}
   <Picker.Item label="Public Transport" value="public" />
    */}
 {/* </Picker> */}
-  </View>
+  {/* </View> */}
   <Text style={styles.headingStyle}>What is the purpose of your commute/ regular trip?</Text>
 <View style={styles.rowstyle}>
   <Picker
@@ -451,48 +480,61 @@ onChangeText={(text) => this.setState({timeTaken:text})}
    })} />
   </View>
   
-  <Text style={styles.headingStyle}> Have you used metro for your daily commute earlier?</Text>
-  <RadioGroup  
-  flexDirection='row'
-  radioButtons={this.state.dailyCommutedata} 
-  onPress={(data)=>this.setState({
-     dailyCommutedata:data
-   })} />
+ 
   
   <Text style={styles.headingStyle}> Vehicle Ownership (in household)</Text>
    <View style={styles.rowstyle}>
     <Text style={styles.inputtextStyle}>Cars/SUV:</Text>
-<TextInput 
-keyboardType={'numeric'}
-style={styles.inputStyle}
-value={this.state.ownedcars}
-onChangeText={(text) => this.setState({ownedcars:text})}
-/>
+    <Picker
+   selectedValue={this.state.ownedcars}
+  style={{  width: 100,marginLeft:20 }}
+  onValueChange={(itemValue, itemIndex) => this.setState({ownedcars: itemValue}
+  )}
+  >
+  <Picker.Item label="1" value="1" />
+  <Picker.Item label="2" value="2" />
+  <Picker.Item label="3" value="3" />
+  <Picker.Item label="4" value="4" />
+  
+</Picker>
   </View>
 
    <View style={styles.rowstyle}>
     <Text style={styles.inputtextStyle}>2 Wheeler:</Text>
-<TextInput 
-keyboardType={'numeric'}
-style={styles.inputStyle}
-value={this.state.ownedbike}
-onChangeText={(text) => this.setState({ownedbike:text})}
-/>
+    <Picker
+   selectedValue={this.state.ownedbike}
+  style={{  width: 100,marginLeft:20 }}
+  onValueChange={(itemValue, itemIndex) => this.setState({ownedbike: itemValue}
+  )}
+  >
+  <Picker.Item label="1" value="1" />
+  <Picker.Item label="2" value="2" />
+  <Picker.Item label="3" value="3" />
+  <Picker.Item label="4" value="4" />
+  
+</Picker>
+
   </View>
 
    <View style={styles.rowstyle}>
     <Text style={styles.inputtextStyle}>Bicycle:</Text>
-<TextInput 
-keyboardType={'numeric'}
-style={styles.inputStyle}
-value={this.state.ownedbicycle}
-onChangeText={(text) => this.setState({ownedbicycle:text})}
-/>
+    <Picker
+   selectedValue={this.state.ownedbicycle}
+  style={{  width: 100,marginLeft:20 }}
+  onValueChange={(itemValue, itemIndex) => this.setState({ownedbicycle: itemValue}
+  )}
+  >
+  <Picker.Item label="1" value="1" />
+  <Picker.Item label="2" value="2" />
+  <Picker.Item label="3" value="3" />
+  <Picker.Item label="4" value="4" />
+  
+</Picker>
 
 
   </View>
 
-
+<View style={{display:this.state.nonpublicvisible}}>
 <Text style={styles.headingStyle}>Cost of Travel (In Rs.):</Text>
   <RadioGroup  
   
@@ -510,7 +552,131 @@ onChangeText={(text) => this.setState({ownedbicycle:text})}
   onPress={(data)=>this.setState({
      tripsPaidData:data
    })} />
+</View>
 
+{/* For Public Transport */}
+<View style={{display:this.state.publictransportvisible}}>
+<Text style={styles.headingStyle}>Cost of Travel (In Rs.):</Text>
+<Text style={styles.headingStyle}>Is your cost of commute/ regular trips paid by office?</Text>
+  <RadioGroup  
+  flexDirection='row'
+  radioButtons={this.state.tripsPaidData} 
+  onPress={(data)=>this.setState({
+     tripsPaidData:data
+   })} />
+
+
+<View style={styles.rowStyle1}>
+<Text style={styles.inputtextStyle}>Access:</Text>
+<Text style={styles.inputtextStyle}>Main Trip:</Text>
+<Text style={styles.inputtextStyle}>Eggress Trip:</Text>
+</View>
+<Text style={styles.subheadingstyle}>Mode Used:</Text>
+<View style={styles.rowStyle1}>
+    <Picker
+   selectedValue={this.state.accessModeUsed}
+  style={{  width: 100,marginLeft:70 }}
+  onValueChange={(itemValue, itemIndex) => this.setState({accessModeUsed: itemValue}
+  )}
+  >
+  <Picker.Item label="2W(Own)" value="2W(Own)" />
+  <Picker.Item label="2W(Pool)" value="2W(Pool)" />
+  <Picker.Item label="Car(Own)" value="Car(Own)" />
+  <Picker.Item label="Car(Pool)" value="Car(Pool)" />
+  <Picker.Item label="Auto/Taxi" value="Auto/Taxi" />
+  <Picker.Item label="Office Cab" value="Office Cab" />
+  <Picker.Item label="Ola/Uber" value="Ola/Uber" />
+  <Picker.Item label="Ola Bike/Uber Moto" value="Ola Bike/Uber Moto" />
+  <Picker.Item label="Bike Share" value="Bike Share" />
+  <Picker.Item label="Ola/Uber Share" value="Ola/Uber Share" />
+  <Picker.Item label="Walk" value="Walk" />
+  <Picker.Item label="Cycle" value="Cycle" />
+  
+</Picker>
+<Text style={{fontSize:20,
+    color:'black',
+    width:140,
+    textAlign: 'center',
+    marginTop:10}}>{this.state.travelMode}</Text>
+    <Picker
+   selectedValue={this.state.egressTripMode}
+  style={{  width: 100,marginLeft:20 }}
+  onValueChange={(itemValue, itemIndex) => this.setState({egressTripMode: itemValue}
+  )}
+  >
+  <Picker.Item label="2W(Own)" value="2W(Own)" />
+  <Picker.Item label="2W(Pool)" value="2W(Pool)" />
+  <Picker.Item label="Car(Own)" value="Car(Own)" />
+  <Picker.Item label="Car(Pool)" value="Car(Pool)" />
+  <Picker.Item label="Auto/Taxi" value="Auto/Taxi" />
+  <Picker.Item label="Office Cab" value="Office Cab" />
+  <Picker.Item label="Ola/Uber" value="Ola/Uber" />
+  <Picker.Item label="Ola Bike/Uber Moto" value="Ola Bike/Uber Moto" />
+  <Picker.Item label="Bike Share" value="Bike Share" />
+  <Picker.Item label="Ola/Uber Share" value="Ola/Uber Share" />
+  <Picker.Item label="Walk" value="Walk" />
+  <Picker.Item label="Cycle" value="Cycle" />
+  
+</Picker>
+  </View>
+
+  <Text style={styles.subheadingstyle}>Distance:</Text>
+  <View style={styles.rowStyle1}>
+    <TextInput
+    keyboardType={'numeric'}
+   value={this.state.accessDistance}
+   onChangeText={(text) => this.setState({accessDistance:text})}
+     style={{  width: 100,marginLeft:57 }}
+   >
+  
+</TextInput>
+<Text style={{fontSize:20,
+    color:'black',
+    width:140,
+    textAlign: 'center',
+    marginTop:10,
+    marginLeft:20}}>{this.state.travelMode}</Text>
+    <TextInput 
+     keyboardType={'numeric'}
+    value={this.state.egressTripDistance}
+onChangeText={(text) => this.setState({egressTripDistance:text})}
+  style={{  width: 100,marginLeft:10 }}
+  >
+
+</TextInput>
+
+
+  </View>
+  <Text style={styles.subheadingstyle}>Cost:</Text>
+<View style={styles.rowStyle1}>
+    <TextInput
+     keyboardType={'numeric'}
+   value={this.state.accessCost}
+   onChangeText={(text) => this.setState({accessCost:text})}
+     style={{  width: 100,marginLeft:57 }}
+   >
+  
+</TextInput>
+<Text style={{fontSize:20,
+    color:'black',
+    width:140,
+    textAlign: 'center',
+    marginTop:10,
+    marginLeft:20}}>{this.state.travelMode}</Text>
+    <TextInput 
+     keyboardType={'numeric'}
+    value={this.state.egressTripCost}
+onChangeText={(text) => this.setState({egressTripCost:text})}
+  style={{  width: 100,marginLeft:10 }}
+  >
+
+</TextInput>
+
+
+  </View>
+
+
+</View>
 
 <Text style={styles.headingStyle}>Willingness</Text>
 <Text style={{fontSize:19,marginLeft:15,marginTop:15}}>If a reliable first/last mile connectivity service with fixed route, timing, fare and information
@@ -524,7 +690,6 @@ system is provided to you, to connect metro station to/from to your location.</T
   onPress={(data)=>this.setState({
      metroUse:data
    })} />
-
 
  <Button 
             style={{marginTop:30,marginBottom:30}}
@@ -558,6 +723,11 @@ const styles = StyleSheet.create({
     // borderBottomWidth:0.5
     
   },
+  rowStyle1:{
+flexDirection:'row',
+marginTop:15,
+marginLeft:5
+  },
   textStyle:{
     fontSize:20,
     color:'black',
@@ -567,6 +737,13 @@ const styles = StyleSheet.create({
     fontFamily:'bold',
     color:'black',
     marginTop:15,
+    marginLeft:8
+  },
+  subheadingstyle:{
+    fontSize:18,
+    fontFamily:'bold',
+    color:'black',
+    marginTop:5,
     marginLeft:8
   },
   inputStyle1:{
@@ -589,7 +766,13 @@ const styles = StyleSheet.create({
   inputtextStyle:{
     fontSize:20,
     color:'black',
-    width:150,
+    width:140,
+    textAlign: 'right'
+  },
+  inputTextStyle1:{
+    fontSize:20,
+    width:140,
+    color:'black',
     textAlign: 'right'
   }
 });
