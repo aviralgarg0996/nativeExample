@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import RadioGroup from 'react-native-radio-buttons-group';
 import axios from "axios";
 import {basepath} from "../Utils/Constant"
-// import MapView from 'react-native-maps';
+import MapView from 'react-native-maps';
 // create a component
 class SecondScreen extends Component {
   state={
@@ -14,6 +14,7 @@ class SecondScreen extends Component {
     name:"",
     mobile:"",
     address:"",
+    token:"",
     sexData:[
       {
         label: 'Male',
@@ -34,7 +35,13 @@ class SecondScreen extends Component {
      navBarTitleTextCentered: true,
   };
   render() {
-
+    let sexDataButton = this.state.sexData.find(e => e.selected == true);
+    sexDataButton = sexDataButton ? sexDataButton.value : this.state.sexData[0].label;
+    ()=>this.setState({
+    token:this.props.token
+    })
+console.log("token in second screen",this.props.token,this.state.token);
+    
     return (
       <ScrollView>
       <View style={styles.mainView}>
@@ -72,6 +79,8 @@ class SecondScreen extends Component {
       placeholder='Phone No' 
       underlineColorAndroid="transparent"
       password={true}
+      keyboardType='numeric'
+      maxLength={10}
       value={this.state.mobile}
       onChangeText={(text)=>{
           this.setState({
@@ -90,6 +99,21 @@ class SecondScreen extends Component {
               address:text
           })
       }}/>
+      {/* <MapView style={{
+position:'absolute',
+height:"200px",
+width:"200px",
+flex:1
+      }}
+      region={{
+        latitude: 37.78825,
+      longitude: -122.4324,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+      }}
+      >
+
+      </MapView> */}
       {/* <MapView
     initialRegion={{
       latitude: 37.78825,
@@ -124,16 +148,18 @@ class SecondScreen extends Component {
       <Button 
       style={{width:200}}
               onPress={()=>{
-                if(this.state.name=="")
-                alert("Enter Name");
-                else if(this.state.email=="")
-                alert("Enter Email")
-                else if(this.state.address=="")
+               if(this.state.address=="")
                 alert("Enter Address")
-                else if(this.state.mobile=="")
-                alert("Mobile No Field Empty")
+                else if(this.state.sexData=="")
+                alert("Select Sex")
+                else if(this.state.age=="")
+                alert("Enter age")
               
                 else{
+                  let headers={
+                    'Authorization':'Bearer '+this.props.token,
+                    'Accept': 'application/json',
+                  }
                   axios({
                     method: "post",
                     url: basepath+"user/adduser",
@@ -144,21 +170,29 @@ class SecondScreen extends Component {
                       age:this.state.address,
                       address:this.state.address,
                       age:this.state.age,
-                      sex:this.state.sexData
+                      sex:sexDataButton
 
                     },
+                    headers:headers
                   })
                     .then(response => {
                         console.log("response",response)
                         this.props.navigator.push({
                           screen: 'HomeScreen',
                           title: 'Survey',
-                          
+                          passProps:{_id:response.data._id,
+                         name:response.data.name,
+                         age:response.data.age,
+                         gender:response.data.gender,
+                         mobile:response.data.phoneNo,
+                         token:this.props.token,
+                          }
                         });
                        
                     })
                     .catch(error => {
                       console.log("Error");
+                      alert(error)
                     })
                   
                 }

@@ -62,7 +62,7 @@ class FirstScreen extends Component {
                                 method: "post",
                                 url: basepath+"employee/loginEmployee",
                                 data: {
-                                  userName:this.state.email,
+                                  email:this.state.email,
                                   password:this.state.pass
                                 },
                               })
@@ -70,11 +70,15 @@ class FirstScreen extends Component {
                                     console.log("response",response)
                                     this.props.navigator.push({
                                         screen: 'example.SecondScreen',
-                                        title: 'User Details'
+                                        title: 'User Details',
+                                        passProps:{
+                                            token:response.data.token
+                                        }
                                       });
                                 })
                                 .catch(error => {
                                   console.log("Error");
+                                  alert(error)
                                 })
                            
                         }

@@ -1,10 +1,35 @@
 //import liraries
 import React, { Component } from "react";
-import { View, Text, StyleSheet ,Button,Switch,TextInput,ScrollView,Picker} from "react-native";
+import { View, Text, StyleSheet ,Button,Switch,TextInput,ScrollView,Picker,TouchableOpacity} from "react-native";
 import { connect } from "react-redux";
+import axios from "axios";
+import {basepath} from "../Utils/Constant"
 import RadioGroup from 'react-native-radio-buttons-group';
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 // create a component
 class HomeScreen extends Component {
+  componentWillMount() {
+    ()=>{
+    console.log("data",this.props.response,this.props.response.data._id)
+      
+      this.setState({
+      _id:this.props._id
+    })}
+  }
+  _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+ 
+  _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+ 
+  _handleDatePicked = (time) => {
+    var res=time.toString().split("2018 ");
+    var exacttime=res[1].split("GMT");
+    this.setState({
+      startTime:exacttime[0]
+    })
+    console.log('A date has been picked: ', time,exacttime[0]);
+    this._hideDateTimePicker();
+  };
   state={
     routeChecked:false,
     servicesChecked:false,
@@ -15,6 +40,7 @@ class HomeScreen extends Component {
     crowdChecked:false,
     seatChecked:false,
     safetyChecked:false,
+    isDateTimePickerVisible: false,
     nonpublicvisible:'none',
     publictransportvisible:'none',
     otherResons:"",
@@ -25,9 +51,9 @@ class HomeScreen extends Component {
     timeTaken:"",
     travelMode:"",
     travelPurpose:"",
-    ownedcars:"",
-    ownedbike:"",
-    ownedbicycle:"",
+    ownedcars:"1",
+    ownedbike:"1",
+    ownedbicycle:"1",
     accessModeUsed:"",
     accessDistance:"",
     accessCost:"",
@@ -37,6 +63,8 @@ class HomeScreen extends Component {
     egressTripMode:"",
     egressTripDistance:"",
     egressTripCost:"",
+    _id:"",
+    dialogVisible:false,
     travelTimeData: [
       {
         label: 'Saves lot of time',
@@ -251,6 +279,29 @@ class HomeScreen extends Component {
      navBarTitleTextCentered: true,
   };
   render() {
+
+    let travelTimeDataButton = this.state.travelTimeData.find(e => e.selected == true);
+        travelTimeDataButton = travelTimeDataButton ? travelTimeDataButton.value : this.state.travelTimeData[0].label;
+    let costDataButton = this.state.costData.find(e => e.selected == true);
+        costDataButton = costDataButton ? costDataButton.value : this.state.costData[0].label;
+    let comfortDataButton = this.state.comfortData.find(e => e.selected == true);
+        comfortDataButton = comfortDataButton ? comfortDataButton.value : this.state.comfortData[0].label;
+    let safeDataButton = this.state.safeData.find(e => e.selected == true);
+        safeDataButton = safeDataButton ? safeDataButton.value : this.state.safeData[0].label;
+    let dailyCommuteDataButton = this.state.dailyCommutedata.find(e => e.selected == true);
+        dailyCommuteDataButton = dailyCommuteDataButton ? dailyCommuteDataButton.value : this.state.dailyCommutedata[0].label;
+    let travelCostDataButton = this.state.travelCostData.find(e => e.selected == true);
+        travelCostDataButton = travelCostDataButton ? travelCostDataButton.value : this.state.travelCostData[0].label;
+    let tripsPaidDataButton = this.state.tripsPaidData.find(e => e.selected == true);
+        tripsPaidDataButton = tripsPaidDataButton ? tripsPaidDataButton.value : this.state.tripsPaidData[0].label;
+    let metroUseButton = this.state.metroUse.find(e => e.selected == true);
+        metroUseButton = metroUseButton ? metroUseButton.value : this.state.metroUse[0].label;
+  
+          
+      
+        console.log("valueinconsole",this.props.token)
+   
+        console.log("datainprops",this.props._id)
     onPress = data => this.setState({ data });
 
 
@@ -261,6 +312,8 @@ if (this.state.travelMode!="") {
     return (
       <ScrollView>
       <View style={styles.container}>
+
+       
       <Text style={styles.headingStyle}> Have you used metro for your daily commute earlier?</Text>
   <RadioGroup  
   flexDirection='row'
@@ -344,7 +397,7 @@ if (this.state.travelMode!="") {
   </View>
   <View style={styles.rowstyle}>
     <Text style={styles.inputtextStyle}>Others:</Text>
-<TextInput style={styles.inputTextStyle}
+<TextInput style={{width:200}}
 value={this.state.otherResons}
 onChangeText={(text) => this.setState({otherResons:text})}
 />
@@ -371,24 +424,30 @@ onChangeText={(text) => this.setState({destination:text})}
     <Text style={styles.inputtextStyle}>Distance:</Text>
 <TextInput style={styles.inputStyle}
 value={this.state.distance}
+keyboardType='numeric'
 onChangeText={(text) => this.setState({distance:text})}
 />
   </View>
 
     <View style={styles.rowstyle}>
     <Text style={styles.inputtextStyle}>Start Time:</Text>
-<TextInput style={styles.inputStyle}
-value={this.state.startTime}
-onChangeText={(text) => this.setState({startTime:text})}
-/>
+        <TouchableOpacity style={StyleSheet.inputStyle}onPress={this._showDateTimePicker}>
+          <Text style={{marginLeft:15,fontSize:20}}>{this.state.startTime==""? <Text>Enter Start Time</Text>:<Text>{this.state.startTime}</Text>}</Text>
+        </TouchableOpacity>
+        <DateTimePicker
+        mode='time'
+          isVisible={this.state.isDateTimePickerVisible}
+          onConfirm={this._handleDatePicked}
+          onCancel={this._hideDateTimePicker}
+        />
   </View>
 
    <View style={styles.rowstyle}>
     <Text style={styles.inputtextStyle}>Time Taken:</Text>
-<TextInput style={styles.inputStyle}
+    <TextInput style={styles.inputStyle}
 value={this.state.timeTaken}
-onChangeText={(text) => this.setState({timeTaken:text})}
-/>
+keyboardType='numeric'
+onChangeText={(text) => this.setState({timeTaken:text})}/>
   </View>
   <View style={styles.rowstyle}>
   <Text style={styles.headingStyle}>Mode of Travel</Text>
@@ -690,14 +749,255 @@ system is provided to you, to connect metro station to/from to your location.</T
   onPress={(data)=>this.setState({
      metroUse:data
    })} />
-
+<ConfirmDialog
+    title="Submit Survey"
+    visible={this.state.dialogVisible}
+    onTouchOutside={() => this.setState({dialogVisible: false})}
+    positiveButton={{
+        title: "OK",
+        onPress:()=>{
+          if(this.props._id=="")
+          {
+            alert("Start Survey Again");
+            this.props.navigator.push({
+              screen: 'FirstScreen',
+              title: 'Login',
+            });
+           
+          }
+          else if(this.state.startTime=="Enter Start Time")
+          alert("Enter Start time");
+           else{
+            let headers={
+              'Authorization':'Bearer '+this.props.token,
+              'Accept': 'application/json',
+            }
+            console.log("datainprops111111",this.state.ownedcars,this.state.ownedbike,this.state.ownedbicycle)
+             axios({
+               method: "post",
+               url: basepath+"survey/addSurvey",
+               data: {
+                 _id:this.props._id,
+                 useMetro6:dailyCommuteDataButton,
+                 personalInformation1:{
+                  name:this.props.name,
+                  age:this.props.age,
+                  mobile:this.props.mobile,
+                  gender:this.props.gender
+                 },
+                 reasonNoMetro2:{
+                   notRoute:this.state.routeChecked,
+                   lackOfService:this.state.servicesChecked,
+                   travelTimeHigh:this.state.travelTimechecked,
+                   unaffordableFare:this.state.faresChecked,
+                   highReachingCost:this.state.reachingMetroChecked,
+                   modeChanges:this.state.modeChanges,
+                   crowded:this.state.crowdChecked,
+                   seatAvailable:this.state.seatChecked,
+                   security:this.state.safetyChecked,
+                   other:this.state.otherResons
+                 },
+                regularTrip3:{
+                  origin:this.state.origin,
+                  destination:this.state.destination,
+                  distance:this.state.distance,
+                  startTime:this.state.startTime,
+                  timeTaken:this.state.timeTaken
+                },
+                modeOfTravel:{
+                  travelType:this.state.travelMode,
+                  travelTrasport:""
+                },
+                purposeTrip4:this.state.travelPurpose,
+                commuteTrip:{
+                  travelTime:"Travel Time",
+                  opinionTrasport:travelTimeDataButton
+                },
+                commuteTrip1:{
+                  cost:"Cost",
+                  opinionCost:costDataButton
+                },
+                commuteTrip2:{
+                  comfort:"Comfort",
+                  opinionComfort:comfortDataButton
+                },
+                commuteTrip3:{
+                  travelSafety:"Safety",
+                  opinionSafety:safeDataButton
+                },
+                vehicleOwnerShip7:{
+                  cars:this.state.ownedcars,
+                  twoWheeler:this.state.ownedbike,
+                  bicycle:this.state.ownedbicycle
+                },
+               costOfTravel8:travelCostDataButton,
+               paidByOffice9:this.state.tripsPaidData,
+               para:{
+                modeUsed:"Mode Used",
+                access:this.state.accessModeUsed,
+                mainTrip:this.state.mainTripMode,
+                egressTrip:this.state.egressTripMode 
+               },
+               parameter1:{
+                 distance:"Distance",
+                 access1:this.state.accessDistance,
+                 mainTrip1:this.state.mainTripDistance,
+                 egressTrip1:this.state.egressTripDistance 
+                },
+                parameter2:{
+                 cost:"Cost",
+                 access2:this.state.accessCost,
+                 mainTrip2:this.state.mainTripCost,
+                 egressTrip2:this.state.egressTripCost 
+                },
+               willingness10:metroUseButton
+               },
+              headers:headers
+              }
+            )
+               .then(response => {
+                   console.log("response",response)
+                   this.setState({
+                     dialogVisible:false
+                   })
+                   this.props.navigator.push({
+                     screen: 'ThanksScreen',
+                     title: 'Thanks',
+                   });
+                  
+               })
+               .catch(error => {
+                 alert(error);
+               }
+              )
+            
+           }
+         }
+    }} 
+    negativeButton={{
+      title: "Cancel",
+      onPress: () => this.setState({
+        dialogVisible:false
+      }) 
+  }}
+    >
+     <View>
+      <Text>  Are you sure you want to submit?</Text>
+    </View>
+    </ConfirmDialog>
  <Button 
             style={{marginTop:30,marginBottom:30}}
+            // onPress={()=>{
+            //   if(this.props._id=="")
+            //    alert("Enter Address")
+            //    else{
+            //     let headers={
+            //       'Authorization':'Bearer '+this.props.token,
+            //       'Accept': 'application/json',
+            //     }
+            //     console.log("datainprops111111",this.state.ownedcars,this.state.ownedbike,this.state.ownedbicycle)
+            //      axios({
+            //        method: "post",
+            //        url: basepath+"survey/addSurvey",
+            //        data: {
+            //          _id:this.props._id,
+            //          useMetro6:dailyCommuteDataButton,
+            //          personalInformation1:{
+            //           name:this.props.name,
+            //           age:this.props.age,
+            //           mobile:this.props.mobile,
+            //           gender:this.props.gender
+            //          },
+            //          reasonNoMetro2:{
+            //            notRoute:this.state.routeChecked,
+            //            lackOfService:this.state.servicesChecked,
+            //            travelTimeHigh:this.state.travelTimechecked,
+            //            unaffordableFare:this.state.faresChecked,
+            //            highReachingCost:this.state.reachingMetroChecked,
+            //            modeChanges:this.state.modeChanges,
+            //            crowded:this.state.crowdChecked,
+            //            seatAvailable:this.state.seatChecked,
+            //            security:this.state.safetyChecked,
+            //            other:this.state.otherResons
+            //          },
+            //         regularTrip3:{
+            //           origin:this.state.origin,
+            //           destination:this.state.destination,
+            //           distance:this.state.distance,
+            //           startTime:this.state.startTime,
+            //           timeTaken:this.state.timeTaken
+            //         },
+            //         modeOfTravel:{
+            //           travelType:this.state.travelMode,
+            //           travelTrasport:""
+            //         },
+            //         purposeTrip4:this.state.travelPurpose,
+            //         commuteTrip:{
+            //           travelTime:"Travel Time",
+            //           opinionTrasport:travelTimeDataButton
+            //         },
+            //         commuteTrip1:{
+            //           cost:"Cost",
+            //           opinionCost:costDataButton
+            //         },
+            //         commuteTrip2:{
+            //           comfort:"Comfort",
+            //           opinionComfort:comfortDataButton
+            //         },
+            //         commuteTrip3:{
+            //           travelSafety:"Safety",
+            //           opinionSafety:safeDataButton
+            //         },
+            //         vehicleOwnerShip7:{
+            //           cars:this.state.ownedcars,
+            //           twoWheeler:this.state.ownedbike,
+            //           bicycle:this.state.ownedbicycle
+            //         },
+            //        costOfTravel8:travelCostDataButton,
+            //        paidByOffice9:this.state.tripsPaidData,
+            //        para:{
+            //         modeUsed:"Mode Used",
+            //         access:this.state.accessModeUsed,
+            //         mainTrip:this.state.mainTripMode,
+            //         egressTrip:this.state.egressTripMode 
+            //        },
+            //        parameter1:{
+            //          distance:"Distance",
+            //          access1:this.state.accessDistance,
+            //          mainTrip1:this.state.mainTripDistance,
+            //          egressTrip1:this.state.egressTripDistance 
+            //         },
+            //         parameter2:{
+            //          cost:"Cost",
+            //          access2:this.state.accessCost,
+            //          mainTrip2:this.state.mainTripCost,
+            //          egressTrip2:this.state.egressTripCost 
+            //         },
+            //        willingness10:metroUseButton
+            //        },
+            //       headers:headers
+            //       }
+            //     )
+            //        .then(response => {
+            //            console.log("response",response)
+            //            this.props.navigator.push({
+            //              screen: 'ThanksScreen',
+            //              title: 'Thanks',
+            //            });
+                      
+            //        })
+            //        .catch(error => {
+            //          console.log("Error",error);
+            //          alert(error)
+            //        }
+            //       )
+                
+            //    }
+            //  }}
                     onPress={()=>{
-                         this.props.navigator.push({
-                                            screen: 'ThanksScreen',
-                                            title: 'Survey Complete'
-                                          });
+                        this.setState({
+                          dialogVisible:true
+                        })
                       
                         }
                      
