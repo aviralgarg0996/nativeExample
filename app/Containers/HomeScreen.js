@@ -41,7 +41,7 @@ class HomeScreen extends Component {
     seatChecked:false,
     safetyChecked:false,
     isDateTimePickerVisible: false,
-    nonpublicvisible:'none',
+    nonpublicvisible:'flex',
     publictransportvisible:'none',
     otherResons:"",
     origin:"",
@@ -51,9 +51,9 @@ class HomeScreen extends Component {
     timeTaken:"",
     travelMode:"",
     travelPurpose:"",
-    ownedcars:"1",
-    ownedbike:"1",
-    ownedbicycle:"1",
+    ownedcars:"0",
+    ownedbike:"0",
+    ownedbicycle:"0",
     accessModeUsed:"",
     accessDistance:"",
     accessCost:"",
@@ -64,7 +64,12 @@ class HomeScreen extends Component {
     egressTripDistance:"",
     egressTripCost:"",
     _id:"",
+    privateVisible:'flex',
+    autoVisible:'none',
+    sharedvisible:'none',
+    publicVisible:'none',
     dialogVisible:false,
+    parkingFees:0,
     travelTimeData: [
       {
         label: 'Saves lot of time',
@@ -273,6 +278,105 @@ class HomeScreen extends Component {
         color:'green',
       }, 
     ],
+    privateData:[
+      {
+        label: '2W(Own)',
+        value:'2W(Own)',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: '2W(Pool)',
+        value:'2W(Pool)',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Car(Own)',
+        value:'Car(Own)',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Car(Pool)',
+        value:'Car(Pool)',
+        size: 30,
+        color:'green',
+      }, 
+    ],
+    autoData:[
+      {
+        label: 'Auto/Taxi',
+        value:'Auto/Taxi',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Office Cab',
+        value:'Office Cab',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Aggregators(Ola/Uber)',
+        value:'Aggregators(Ola/Uber)',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Ola Bike/Uber Moto',
+        value:'Ola Bike/Uber Moto',
+        size: 30,
+        color:'green',
+      }, 
+    ],
+    sharedData:[
+      {
+        label: 'Auto/Taxi',
+        value:'Auto/Taxi',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Car Pool',
+        value:'Car Pool',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Bike Share/Rent',
+        value:'Bike Share/Rent',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Ola/Uber Share',
+        value:'Ola/Uber Share',
+        size: 30,
+        color:'green',
+      }, 
+    ],
+    publicData:[
+      {
+        label: 'AC Bus',
+        value:'AC Bus',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Non AC Bus',
+        value:'Non AC Bus',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Bus Aggregator/Shuttle',
+        value:'Bus Aggregator/Shuttle',
+        size: 30,
+        color:'green',
+      }, 
+    ],
+
   }
   static navigatorStyle = {
     navBarBackgroundColor: "#63b342",
@@ -296,6 +400,14 @@ class HomeScreen extends Component {
         tripsPaidDataButton = tripsPaidDataButton ? tripsPaidDataButton.value : this.state.tripsPaidData[0].label;
     let metroUseButton = this.state.metroUse.find(e => e.selected == true);
         metroUseButton = metroUseButton ? metroUseButton.value : this.state.metroUse[0].label;
+    let privateDataButton = this.state.privateData.find(e => e.selected == true);
+        privateDataButton = privateDataButton ? privateDataButton.value : this.state.privateData[0].label;
+        let sharedDataButton = this.state.sharedData.find(e => e.selected == true);
+        sharedDataButton = sharedDataButton ? sharedDataButton.value : this.state.sharedData[0].label;
+        let autoDataButton = this.state.autoData.find(e => e.selected == true);
+        autoDataButton = autoDataButton ? autoDataButton.value : this.state.autoData[0].label;
+        let publicDataButton = this.state.publicData.find(e => e.selected == true);
+        publicDataButton = publicDataButton ? publicDataButton.value : this.state.publicData[0].label;
   
           
       
@@ -455,18 +567,70 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
    selectedValue={this.state.travelMode}
   style={{  width: 200,marginLeft:20 ,marginTop:10}}
   onValueChange={
-    (itemValue, itemIndex) => itemValue=="public"?this.setState(
-      {
+    (itemValue, itemIndex) => {
+      if(itemValue=='public')
+      this.setState({
         travelMode: itemValue,
         nonpublicvisible:'none',
-        publictransportvisible:'flex'
+        publictransportvisible:'flex',
+        publicVisible:'flex',
+        privateVisible:'none',
+        sharedvisible:'none',
+        autoVisible:'none'
+      })
+      else if(itemValue=="Private")
+      {
+        this.setState({
+          travelMode:itemValue,
+          privateVisible:'flex',
+          sharedvisible:'none',
+        autoVisible:'none',
+        publicVisible:'none',
+        publictransportvisible:'none',
+        nonpublicvisible:'flex'
+        })
       }
-  ):this.setState( 
-    {travelMode: itemValue,
-    publictransportvisible:'none',
-    nonpublicvisible:'flex'
+      else if(itemValue=="taxi")
+      {
+        this.setState({
+          travelMode:itemValue,
+          privateVisible:'none',
+          sharedvisible:'none',
+        autoVisible:'flex',
+        publicVisible:'none',
+        publictransportvisible:'none',
+        nonpublicvisible:'flex'
+        })
+      }
+      else
+      {
+        this.setState({
+          travelMode:itemValue,
+          privateVisible:'none',
+          sharedvisible:'flex',
+        autoVisible:'none',
+        publicVisible:'none',
+        publictransportvisible:'none',
+        nonpublicvisible:'flex'
+        })
+      }
     }
-  )}
+    
+    
+  //   itemValue=="public"?this.setState(
+  //     {
+  //       travelMode: itemValue,
+  //       nonpublicvisible:'none',
+  //       publictransportvisible:'flex',
+  //       publicVisible:'flex'
+  //     }
+  // ):this.setState( 
+  //   {travelMode: itemValue,
+  //   publictransportvisible:'none',
+  //   nonpublicvisible:'flex'
+  //   }
+  // )
+}
   >
   <Picker.Item label="Private" value="Private" />
   <Picker.Item label="Auto/Taxi" value="taxi" />
@@ -476,7 +640,44 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
 </Picker>
 
   </View>
+  <View style={{display:this.state.privateVisible}}>
+<Text style={styles.headingStyle}>Private:</Text>
+  <RadioGroup  
   
+  radioButtons={this.state.privateData} 
+  onPress={(data)=>this.setState({
+     privateData:data
+   })} />
+</View>
+
+
+<View style={{display:this.state.autoVisible}}>
+<Text style={styles.headingStyle}>Auto/Taxi:</Text>
+  <RadioGroup  
+  
+  radioButtons={this.state.autoData} 
+  onPress={(data)=>this.setState({
+     autoData:data
+   })} />
+</View>
+<View style={{display:this.state.sharedvisible}}>
+<Text style={styles.headingStyle}>Shared:</Text>
+  <RadioGroup  
+  
+  radioButtons={this.state.sharedData} 
+  onPress={(data)=>this.setState({
+     sharedData:data
+   })} />
+</View>
+<View style={{display:this.state.publicVisible}}>
+<Text style={styles.headingStyle}>Public:</Text>
+  <RadioGroup  
+  
+  radioButtons={this.state.publicData} 
+  onPress={(data)=>this.setState({
+     publicData:data
+   })} />
+</View>
   {/* <View style={styles.rowstyle}> */}
   {/* <Text style={styles.headingStyle}>{this.state.travelMode}</Text> */}
   {/* <Picker
@@ -550,6 +751,7 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   onValueChange={(itemValue, itemIndex) => this.setState({ownedcars: itemValue}
   )}
   >
+  <Picker.Item label="0" value="0" />
   <Picker.Item label="1" value="1" />
   <Picker.Item label="2" value="2" />
   <Picker.Item label="3" value="3" />
@@ -566,6 +768,7 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   onValueChange={(itemValue, itemIndex) => this.setState({ownedbike: itemValue}
   )}
   >
+  <Picker.Item label="0" value="0" />
   <Picker.Item label="1" value="1" />
   <Picker.Item label="2" value="2" />
   <Picker.Item label="3" value="3" />
@@ -583,6 +786,8 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   onValueChange={(itemValue, itemIndex) => this.setState({ownedbicycle: itemValue}
   )}
   >
+  <Picker.Item label="0" value="0" />
+  
   <Picker.Item label="1" value="1" />
   <Picker.Item label="2" value="2" />
   <Picker.Item label="3" value="3" />
@@ -611,6 +816,15 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   onPress={(data)=>this.setState({
      tripsPaidData:data
    })} />
+
+   <View style={styles.rowstyle}>
+    <Text style={styles.inputtextStyle}>Parking Fees:</Text>
+<TextInput style={styles.inputStyle}
+value={this.state.parkingFees}
+keyboardType='numeric'
+onChangeText={(text) => this.setState({parkingFees:text})}
+/>
+  </View>
 </View>
 
 {/* For Public Transport */}
@@ -644,10 +858,15 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   <Picker.Item label="Car(Pool)" value="Car(Pool)" />
   <Picker.Item label="Auto/Taxi" value="Auto/Taxi" />
   <Picker.Item label="Office Cab" value="Office Cab" />
-  <Picker.Item label="Ola/Uber" value="Ola/Uber" />
+  <Picker.Item label="Aggregators/Ola/Uber" value="Aggregators/Ola/Uber" />
   <Picker.Item label="Ola Bike/Uber Moto" value="Ola Bike/Uber Moto" />
-  <Picker.Item label="Bike Share" value="Bike Share" />
+  <Picker.Item label="Shared Auto" value="Shared Auto" />
+  
+  <Picker.Item label="Bike Rent" value="Bike Rent" />
   <Picker.Item label="Ola/Uber Share" value="Ola/Uber Share" />
+  <Picker.Item label="Cycle Rikshaw" value="Cycle Rikshaw" />
+  <Picker.Item label="E-rikshaw" value="E-rikshaw" />
+  
   <Picker.Item label="Walk" value="Walk" />
   <Picker.Item label="Cycle" value="Cycle" />
   
@@ -684,6 +903,7 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
     <TextInput
     keyboardType={'numeric'}
    value={this.state.accessDistance}
+   placeholder="distance"
    onChangeText={(text) => this.setState({accessDistance:text})}
      style={{  width: 100,marginLeft:57 }}
    >
@@ -692,11 +912,13 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
 <Text style={{fontSize:20,
     color:'black',
     width:140,
+   
     textAlign: 'center',
     marginTop:10,
     marginLeft:20}}>{this.state.travelMode}</Text>
     <TextInput 
      keyboardType={'numeric'}
+     placeholder="distance"
     value={this.state.egressTripDistance}
 onChangeText={(text) => this.setState({egressTripDistance:text})}
   style={{  width: 100,marginLeft:10 }}
@@ -711,6 +933,7 @@ onChangeText={(text) => this.setState({egressTripDistance:text})}
     <TextInput
      keyboardType={'numeric'}
    value={this.state.accessCost}
+   placeholder="Access Cost"
    onChangeText={(text) => this.setState({accessCost:text})}
      style={{  width: 100,marginLeft:57 }}
    >
@@ -719,11 +942,14 @@ onChangeText={(text) => this.setState({egressTripDistance:text})}
 <Text style={{fontSize:20,
     color:'black',
     width:140,
+  
+    
     textAlign: 'center',
     marginTop:10,
     marginLeft:20}}>{this.state.travelMode}</Text>
     <TextInput 
      keyboardType={'numeric'}
+     placeholder="Egress Cost"
     value={this.state.egressTripCost}
 onChangeText={(text) => this.setState({egressTripCost:text})}
   style={{  width: 100,marginLeft:10 }}
@@ -738,8 +964,8 @@ onChangeText={(text) => this.setState({egressTripCost:text})}
 </View>
 
 <Text style={styles.headingStyle}>Willingness</Text>
-<Text style={{fontSize:19,marginLeft:15,marginTop:15}}>If a reliable first/last mile connectivity service with fixed route, timing, fare and information
-system is provided to you, to connect metro station to/from to your location.</Text>
+<Text style={{fontSize:19,marginLeft:15,marginTop:15}}>If a reliable first/last mile connectivity service to connect metro station to/from to your location
+which is accessible, affordable, safe and comfortable is provided,</Text>
 
 
 <Text style={styles.headingStyle}>How likely are you to use metro for your commute/ regular trips?</Text>
@@ -850,7 +1076,8 @@ system is provided to you, to connect metro station to/from to your location.</T
                  mainTrip2:this.state.mainTripCost,
                  egressTrip2:this.state.egressTripCost 
                 },
-               willingness10:metroUseButton
+               willingness10:metroUseButton,
+               parkingFees:this.state.parkingFees,
                },
               headers:headers
               }

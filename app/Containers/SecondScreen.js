@@ -28,6 +28,12 @@ class SecondScreen extends Component {
         size: 30,
         color:'green',
       }, 
+      {
+        label: 'Others',
+        value:'Others',
+        size: 30,
+        color:'green',
+      }, 
     ],
   }
   static navigatorStyle = {
@@ -148,9 +154,8 @@ flex:1
       <Button 
       style={{width:200}}
               onPress={()=>{
-               if(this.state.address=="")
-                alert("Enter Address")
-                else if(this.state.sexData=="")
+        
+               if(this.state.sexData=="")
                 alert("Select Sex")
                 else if(this.state.age=="")
                 alert("Enter age")
