@@ -35,6 +35,7 @@ import java.util.List;
          return getPackages();
      }
  }
+ 
 // public class MainApplication extends Application implements ReactApplication {
 
 //   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {

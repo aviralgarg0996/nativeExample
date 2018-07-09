@@ -19,7 +19,7 @@ class ThanksScreen extends Component {
                     onPress={()=>{
                        
                             this.props.navigator.push({
-                                            screen: 'HomeScreen',
+                                            screen: 'example.SecondScreen',
                                             title: 'User Details'
                                           });
                     
