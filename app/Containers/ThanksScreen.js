@@ -20,7 +20,10 @@ class ThanksScreen extends Component {
                        
                             this.props.navigator.push({
                                             screen: 'example.SecondScreen',
-                                            title: 'User Details'
+                                            title: 'User Details',
+                                            passProps:{
+                                                token:this.props.token
+                                            }
                                           });
                     
                         

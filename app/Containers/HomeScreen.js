@@ -9,13 +9,13 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import { ConfirmDialog } from 'react-native-simple-dialogs';
 // create a component
 class HomeScreen extends Component {
-  componentWillMount() {
-    ()=>{
-    console.log("data",this.props.response,this.props.response.data._id)
+  componentDidMount() {
+    console.log("data1111111",this.props.token)
       
       this.setState({
-      _id:this.props._id
-    })}
+      _id:this.props._id,
+      token:this.props.token
+    })
   }
   _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
  
@@ -69,7 +69,8 @@ class HomeScreen extends Component {
     sharedvisible:'none',
     publicVisible:'none',
     dialogVisible:false,
-    parkingFees:0,
+    parkingFees:"0",
+    token:'',
     travelTimeData: [
       {
         label: 'Saves lot of time',
@@ -411,7 +412,7 @@ class HomeScreen extends Component {
   
           
       
-        console.log("valueinconsole",this.props.token)
+        console.log("valueinconsole",this.state.token);
    
         console.log("datainprops",this.props._id)
     onPress = data => this.setState({ data });
@@ -1090,6 +1091,9 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
                    this.props.navigator.push({
                      screen: 'ThanksScreen',
                      title: 'Thanks',
+                     passProps:{
+                      token:this.state.token
+                  }
                    });
                   
                })

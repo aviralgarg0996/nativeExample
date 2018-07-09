@@ -46,7 +46,7 @@ class SecondScreen extends Component {
     ()=>this.setState({
     token:this.props.token
     })
-console.log("token in second screen",this.props.token,this.state.token);
+console.log("token in second screen",this.props.token,"///////////////",this.state.token);
     
     return (
       <ScrollView>
@@ -181,7 +181,7 @@ flex:1
                     headers:headers
                   })
                     .then(response => {
-                        console.log("response",response)
+                        console.log("responsinseccccccccce",response,this.props.token)
                         this.props.navigator.push({
                           screen: 'HomeScreen',
                           title: 'Survey',
