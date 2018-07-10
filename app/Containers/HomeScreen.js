@@ -10,11 +10,17 @@ import { ConfirmDialog } from 'react-native-simple-dialogs';
 // create a component
 class HomeScreen extends Component {
   componentDidMount() {
-    console.log("data1111111",this.props.token)
-      
+    console.log("data1111111",this.props.token,"origin",this.props.selectedoriginlatitude,this.props.selectedoriginlongitude)
+    console.log("destination",this.props.selecteddestinationlatitude,this.props.selecteddestinationlongitude)
       this.setState({
       _id:this.props._id,
-      token:this.props.token
+      token:this.props.token,
+      name:this.props.name,
+      age:this.props.age,
+      gender:this.props.gender,
+      mobile:this.props.mobile,
+     
+     
     })
   }
   _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
@@ -64,6 +70,10 @@ class HomeScreen extends Component {
     egressTripDistance:"",
     egressTripCost:"",
     _id:"",
+    name:"",
+    age:"",
+    gender:"",
+    mobile:"",
     privateVisible:'flex',
     autoVisible:'none',
     sharedvisible:'none',
@@ -71,6 +81,10 @@ class HomeScreen extends Component {
     dialogVisible:false,
     parkingFees:"0",
     token:'',
+    selectedoriginlat:"",
+    selectedoriginlong:"",
+    selecteddestinationlat:"",
+    selecteddestinationlong:"",
     travelTimeData: [
       {
         label: 'Saves lot of time',
@@ -519,22 +533,59 @@ onChangeText={(text) => this.setState({otherResons:text})}
  <Text style={styles.headingStyle}> Commuting Information/Regular Trip information</Text>
  <View style={styles.rowstyle}>
     <Text style={styles.inputtextStyle}>Home/Origin:</Text>
-<TextInput style={styles.inputStyle}
+    <TouchableOpacity style={StyleSheet.inputStyle}
+    onPress={()=>
+      this.props.navigator.push({
+        screen: 'MapScreen',
+        title: 'Home/Origin',
+        passProps:{
+          _id:this.state._id,
+         name:this.state.name,
+         age:this.state.age,
+         gender:this.state.gender,
+         mobile:this.state.phoneNo,
+         token:this.state.token,
+          }
+      })
+      }>
+      <Text>Select Origin</Text>
+            {/* <Text style={{marginLeft:15,fontSize:20}}>{this.props.selectedoriginlatitude==""? <Text>Select Origin</Text>:<Text>{this.props.selectedoriginlatitude+" , "+this.props.selectedoriginlongitude}</Text>}</Text> */}
+
+   </TouchableOpacity>
+{/* <TextInput style={styles.inputStyle}
 value={this.state.origin}
 onChangeText={(text) => this.setState({origin:text})}
-/>
+/> */}
   </View>
 
    <View style={styles.rowstyle}>
     <Text style={styles.inputtextStyle}>To/Destination:</Text>
-<TextInput style={styles.inputStyle}
+    <TouchableOpacity style={StyleSheet.inputStyle}
+    onPress={()=>
+      this.props.navigator.push({
+        screen: 'DestinationMapScreen',
+        title: 'Destination',
+        passProps:{
+          _id:this.state._id,
+         name:this.state.name,
+         age:this.state.age,
+         gender:this.state.gender,
+         mobile:this.state.phoneNo,
+         token:this.state.token,
+          }
+      })
+      }>
+      <Text>Select Destination</Text>
+            {/* <Text style={{marginLeft:15,fontSize:20}}>{this.props.selectedoriginlatitude==""? <Text>Select Destination</Text>:<Text>{this.props.selecteddestinationlatitude+" , "+this.props.selecteddestinationlongitude}</Text>}</Text> */}
+   </TouchableOpacity>
+{/* <TextInput style={styles.inputStyle}
 value={this.state.destination}
 onChangeText={(text) => this.setState({destination:text})}
-/>
+/> */}
   </View>
 
    <View style={styles.rowstyle}>
-    <Text style={styles.inputtextStyle}>Distance:</Text>
+    <Text style={styles.inputtextStyle}>Distance(KM):</Text>
 <TextInput style={styles.inputStyle}
 value={this.state.distance}
 keyboardType='numeric'
@@ -556,7 +607,7 @@ onChangeText={(text) => this.setState({distance:text})}
   </View>
 
    <View style={styles.rowstyle}>
-    <Text style={styles.inputtextStyle}>Time Taken:</Text>
+    <Text style={styles.inputtextStyle}>Time Taken(Min.):</Text>
     <TextInput style={styles.inputStyle}
 value={this.state.timeTaken}
 keyboardType='numeric'
@@ -983,6 +1034,9 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
     positiveButton={{
         title: "OK",
         onPress:()=>{
+          console.log("selectedorigin",this.state.selectedoriginlat,this.state.selectedoriginlong)
+          console.log("selecteddestination",this.state.selecteddestinationlat,this.state.selecteddestinationlong)
+          
           if(this.props._id=="")
           {
             alert("Start Survey Again");
@@ -996,7 +1050,7 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
           alert("Enter Start time");
            else{
             let headers={
-              'Authorization':'Bearer '+this.props.token,
+              'Authorization':'Bearer '+this.state.token,
               'Accept': 'application/json',
             }
             console.log("datainprops111111",this.state.ownedcars,this.state.ownedbike,this.state.ownedbicycle)
@@ -1004,13 +1058,13 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
                method: "post",
                url: basepath+"survey/addSurvey",
                data: {
-                 _id:this.props._id,
+                 _id:this.state._id,
                  useMetro6:dailyCommuteDataButton,
                  personalInformation1:{
-                  name:this.props.name,
-                  age:this.props.age,
-                  mobile:this.props.mobile,
-                  gender:this.props.gender
+                  name:this.state.name,
+                  age:this.state.age,
+                  mobile:this.state.mobile,
+                  gender:this.state.gender
                  },
                  reasonNoMetro2:{
                    notRoute:this.state.routeChecked,

@@ -185,7 +185,8 @@ flex:1
                         this.props.navigator.push({
                           screen: 'HomeScreen',
                           title: 'Survey',
-                          passProps:{_id:response.data._id,
+                          passProps:{
+                          _id:response.data._id,
                          name:response.data.name,
                          age:response.data.age,
                          gender:response.data.gender,

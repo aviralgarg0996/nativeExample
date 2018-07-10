@@ -6,7 +6,7 @@ import MapView from 'react-native-maps';
 import axios from "axios";
 import {basepath} from "../Utils/Constant"
 // create a component
-class MapScreen extends Component {
+class DestinationMapScreen extends Component {
   state={
     latitude:"",
     longitude:"",
@@ -22,14 +22,13 @@ class MapScreen extends Component {
   }
   componentDidMount() {
     this.setState({
-      _id:this.props._id,
-      token:this.props.token,
-      name:this.props.name,
-      age:this.props.age,
-      gender:this.props.gender,
-      mobile:this.props.mobile
-    })
-
+        _id:this.props._id,
+        token:this.props.token,
+        name:this.props.name,
+        age:this.props.age,
+        gender:this.props.gender,
+        mobile:this.props.mobile
+      })
     navigator.geolocation.getCurrentPosition(
        (position) => {
          console.log("wokeeey");
@@ -76,44 +75,42 @@ this.setState({
        />}
         </MapView>
         <Button
-         title="Set Origin"
+         title="Set Destination"
          onPress={()=>{
-          console.log("inoriginmap",this.state._id,this.state.selectedlatitude,this.state.selectedlongitude)
-          axios({
-            method: "put",
-            url: basepath+"user/updateOrigin",
-            data: {
-              _id:this.state._id,
-              origin: {
-                latitude: this.state.selectedlatitude,
-                longitude: this.state.selectedlongitude               
-}
-            }
-          })
-            .then(response => {
-                console.log("responsinseccccccccce",response,this.props.token)
-                this.props.navigator.push({
-                  screen: 'HomeScreen',
-                  title: 'Survey',
-                  passProps:{
-                    selectedoriginlatitude:this.state.selectedlatitude,
-                    selectedoriginlongitude:this.state.selectedlongitude,
-                    _id:this.state._id,
-                    name:this.state.name,
-                    age:this.state.age,
-                    gender:this.state.gender,
-                    mobile:this.state.phoneNo,
-                    token:this.state.token,
-                  }
-                });
-               
-            })
-            .catch(error => {
-              console.log("Error");
-              alert(error)
-            })
-          
-
+             console.log("indestinationmap",this.state._id,this.state.selectedlatitude,this.state.selectedlongitude)
+             axios({
+                method: "put",
+                url: basepath+"user/updateDes",
+                data: {
+                  _id:this.state._id,
+                  destination: {
+                    latitude1: this.state.selectedlatitude,
+                    longitude1: this.state.selectedlongitude               
+    }
+                },
+              })
+                .then(response => {
+                    console.log("responsinseccccccccce",response,this.props.token)
+                    this.props.navigator.push({
+                        screen: 'HomeScreen',
+                        title: 'Survey',
+                        passProps:{
+                          selecteddestinationlatitude:this.state.selectedlatitude,
+                          selecteddestinationlongitude:this.state.selectedlongitude,
+                          _id:this.state._id,
+                          name:this.state.name,
+                          age:this.state.age,
+                          gender:this.state.gender,
+                          mobile:this.state.phoneNo,
+                          token:this.state.token,
+                        }
+                      });
+                })
+                .catch(error => {
+                  console.log("Error");
+                  alert(error)
+                })
+           
          }}
         />
       </View>
@@ -148,4 +145,4 @@ mapDispatchToProps=(dispatch)=> {
   };
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(MapScreen);
+export default connect(mapStateToProps,mapDispatchToProps)(DestinationMapScreen);
