@@ -548,7 +548,7 @@ onChangeText={(text) => this.setState({otherResons:text})}
           }
       })
       }>
-      <Text>Select Origin</Text>
+      <Text style={{marginLeft:15,fontSize:20}}>Select Origin</Text>
             {/* <Text style={{marginLeft:15,fontSize:20}}>{this.props.selectedoriginlatitude==""? <Text>Select Origin</Text>:<Text>{this.props.selectedoriginlatitude+" , "+this.props.selectedoriginlongitude}</Text>}</Text> */}
 
    </TouchableOpacity>
@@ -575,7 +575,7 @@ onChangeText={(text) => this.setState({origin:text})}
           }
       })
       }>
-      <Text>Select Destination</Text>
+      <Text style={{marginLeft:15,fontSize:20}}>Select Destination</Text>
             {/* <Text style={{marginLeft:15,fontSize:20}}>{this.props.selectedoriginlatitude==""? <Text>Select Destination</Text>:<Text>{this.props.selecteddestinationlatitude+" , "+this.props.selecteddestinationlongitude}</Text>}</Text> */}
    </TouchableOpacity>
 {/* <TextInput style={styles.inputStyle}
