@@ -11,14 +11,22 @@ class MapScreen extends Component {
     latitude:"",
     longitude:"",
     error:"",
-    selectedlatitude:"",
-    selectedlongitude:"",
     _id:"",
     name:"",
     age:"",
     gender:"",
     mobile:"",
-    token:""
+    token:"",
+    address:"",
+    key:"AIzaSyDH6goBEWYbdmSimk2wdNV8o7nYTxoItMU",
+    latituderegion:"28.638774",
+    longituderegion:"77.366464",
+    region: {
+      latitude:28.638774,
+      longitude:77.366464,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    },
   }
   componentDidMount() {
     this.setState({
@@ -27,7 +35,7 @@ class MapScreen extends Component {
       name:this.props.name,
       age:this.props.age,
       gender:this.props.gender,
-      mobile:this.props.mobile
+      mobile:this.props.mobile  
     })
 
     navigator.geolocation.getCurrentPosition(
@@ -35,8 +43,8 @@ class MapScreen extends Component {
          console.log("wokeeey");
          console.log(position);
          this.setState({
-           latitude: position.coords.latitude,
-           longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
            error: null,
          });
        },
@@ -44,18 +52,48 @@ class MapScreen extends Component {
        { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
      );
    }
-
+   onRegionChange(region) {
+   ()=> this.setState({ region });
+  }
     render() {
         return (
             <View style={styles.container}>
+            <TextInput style={{width:300}}
+value={this.state.address}
+onChangeText={(text) => this.setState({address:text})}
+placeholder={"Enter your Address here"}
+/>
+<Button
+title="Search Address Location"
+onPress={()=>{
+  axios({
+    method: "get",
+    url: `https://maps.googleapis.com/maps/api/geocode/json?address=${this.state.address}&key=${this.state.key}`
+  }).then(response => {
+    console.log("response",response)
+    let region= {
+      latitude:response.data.results[0].geometry.location.lat,
+      longitude:response.data.results[0].geometry.location.lng,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    }
+    this.setState({
+      latitude:response.data.results[0].geometry.location.lat,
+      longitude:response.data.results[0].geometry.location.lng,
+      region:region
+    })
+}).catch(error => {
+  console.log("Error");
+  alert(error)
+})
+
+}}
+/>
+
         <MapView
           style={styles.map}
-          region={{
-            latitude:28.638774,
-            longitude:77.366464,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05
-          }}
+          region={this.state.region}
+          onRegionChange={this.onRegionChange}
         >
           {!!this.state.latitude && !!this.state.longitude && 
           <MapView.Marker
@@ -63,9 +101,11 @@ class MapScreen extends Component {
           onDragStart={() => console.log('onDragStart', arguments)}
           onDragEnd={(position)=>{
             console.log('onDragEnd',position.nativeEvent.coordinate,this.state.latitude)
-this.setState({
-  selectedlatitude:position.nativeEvent.coordinate.latitude,
-  selectedlongitude:position.nativeEvent.coordinate.longitude
+          
+            this.setState({
+  latitude:position.nativeEvent.coordinate.latitude,
+  longitude:position.nativeEvent.coordinate.longitude,
+ 
 })
           }
           }
@@ -78,15 +118,15 @@ this.setState({
         <Button
          title="Set Origin"
          onPress={()=>{
-          console.log("inoriginmap",this.state._id,this.state.selectedlatitude,this.state.selectedlongitude)
+          console.log("inoriginmap",this.state._id,this.state.latitude,this.state.longitude)
           axios({
             method: "put",
             url: basepath+"user/updateOrigin",
             data: {
               _id:this.state._id,
               origin: {
-                latitude: this.state.selectedlatitude,
-                longitude: this.state.selectedlongitude               
+                latitude: this.state.latitude,
+                longitude: this.state.longitude               
 }
             }
           })
@@ -96,8 +136,8 @@ this.setState({
                   screen: 'HomeScreen',
                   title: 'Survey',
                   passProps:{
-                    selectedoriginlatitude:this.state.selectedlatitude,
-                    selectedoriginlongitude:this.state.selectedlongitude,
+                    selectedoriginlatitude:this.state.latitude,
+                    selectedoriginlongitude:this.state.longitude,
                     _id:this.state._id,
                     name:this.state.name,
                     age:this.state.age,
@@ -126,15 +166,16 @@ this.setState({
 const styles = StyleSheet.create({
     container: {
       ...StyleSheet.absoluteFillObject,
-      top: 0,
+    
+    },
+    map: {
+      ...StyleSheet.absoluteFillObject,
+      top: 80,
       left:0,
       right:0,
       bottom:0,
       justifyContent: 'flex-end',
       alignItems: 'center',
-    },
-    map: {
-      ...StyleSheet.absoluteFillObject,
     },
 });
 //make this component available to the app
