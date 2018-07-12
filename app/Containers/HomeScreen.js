@@ -85,6 +85,7 @@ class HomeScreen extends Component {
     selectedoriginlong:"",
     selecteddestinationlat:"",
     selecteddestinationlong:"",
+    travelTransport:"",
     travelTimeData: [
       {
         label: 'Saves lot of time',
@@ -385,12 +386,39 @@ class HomeScreen extends Component {
         color:'green',
       }, 
       {
+        label: 'Whichever Comes First',
+        value:'Whichever Comes First',
+        size: 30,
+        color:'green',
+      }, 
+      {
         label: 'Bus Aggregator/Shuttle',
         value:'Bus Aggregator/Shuttle',
         size: 30,
         color:'green',
       }, 
     ],
+    purposeTripData:[
+      {
+        label: 'Work',
+        value:'Work',
+        size: 30,
+        color:'green',
+      },
+       {
+        label: 'Educational',
+        value:'Educational',
+        size: 30,
+        color:'green',
+      }, 
+      {
+        label: 'Others',
+        value:'Others',
+        size: 30,
+        color:'green',
+      }, 
+    ],
+
 
   }
   static navigatorStyle = {
@@ -417,12 +445,14 @@ class HomeScreen extends Component {
         metroUseButton = metroUseButton ? metroUseButton.value : this.state.metroUse[0].label;
     let privateDataButton = this.state.privateData.find(e => e.selected == true);
         privateDataButton = privateDataButton ? privateDataButton.value : this.state.privateData[0].label;
-        let sharedDataButton = this.state.sharedData.find(e => e.selected == true);
+    let sharedDataButton = this.state.sharedData.find(e => e.selected == true);
         sharedDataButton = sharedDataButton ? sharedDataButton.value : this.state.sharedData[0].label;
-        let autoDataButton = this.state.autoData.find(e => e.selected == true);
+    let autoDataButton = this.state.autoData.find(e => e.selected == true);
         autoDataButton = autoDataButton ? autoDataButton.value : this.state.autoData[0].label;
-        let publicDataButton = this.state.publicData.find(e => e.selected == true);
+    let publicDataButton = this.state.publicData.find(e => e.selected == true);
         publicDataButton = publicDataButton ? publicDataButton.value : this.state.publicData[0].label;
+    let purposeTripDataButton = this.state.purposeTripData.find(e => e.selected == true);
+        purposeTripDataButton = purposeTripDataButton ? purposeTripDataButton.value : this.state.purposeTripData[0].label;
   
           
       
@@ -439,98 +469,7 @@ if (this.state.travelMode!="") {
     return (
       <ScrollView>
       <View style={styles.container}>
-
-       
-      <Text style={styles.headingStyle}> Have you used metro for your daily commute earlier?</Text>
-  <RadioGroup  
-  flexDirection='row'
-  radioButtons={this.state.dailyCommutedata} 
-  onPress={(data)=>this.setState({
-     dailyCommutedata:data
-   })} />
-<Text style={styles.headingStyle}>Reasons for not using metro?</Text>
-<View style={styles.rowstyle}>
-
-<Switch
-      onValueChange = {()=>this.setState({
-              routeChecked:!this.state.routeChecked
-            })}
-            value = {this.state.routeChecked}/>
-    <Text style={styles.textStyle}> My Route doesn't match with Metro Line</Text>
-  </View>
-  <View style={styles.rowstyle}>
-<Switch
-      onValueChange = {()=>this.setState({
-              servicesChecked:!this.state.servicesChecked
-            })}
-            value = {this.state.servicesChecked}/>
-    <Text style={styles.textStyle}> Lack of any good services to/from metro station</Text>
-  </View>
-  <View style={styles.rowstyle}>
-<Switch
-      onValueChange = {()=>this.setState({
-              travelTimechecked:!this.state.travelTimechecked
-            })}
-            value = {this.state.travelTimechecked}/>
-    <Text style={styles.textStyle}> Travel time is higher</Text>
-  </View>
-  <View style={styles.rowstyle}>
-<Switch
-      onValueChange = {()=>this.setState({
-              faresChecked:!this.state.faresChecked
-            })}
-            value = {this.state.faresChecked}/>
-    <Text style={styles.textStyle}> Metro fares are unaffordable for me</Text>
-  </View>
-  <View style={styles.rowstyle}>
-<Switch
-      onValueChange = {()=>this.setState({
-              reachingMetroChecked:!this.state.reachingMetroChecked
-            })}
-            value = {this.state.reachingMetroChecked}/>
-    <Text style={styles.textStyle}> Cost of reaching metro station is high</Text>
-  </View>
-  <View style={styles.rowstyle}>
-<Switch
-      onValueChange = {()=>this.setState({
-              transferChecked:!this.state.transferChecked
-            })}
-            value = {this.state.transferChecked}/>
-    <Text style={styles.textStyle}> High number of transfers/ mode changes</Text>
-  </View>
-  <View style={styles.rowstyle}>
-<Switch
-      onValueChange = {()=>this.setState({
-              crowdChecked:!this.state.crowdChecked
-            })}
-            value = {this.state.crowdChecked}/>
-    <Text style={styles.textStyle}> Metro coaches are crowded</Text>
-  </View>
-  <View style={styles.rowstyle}>
-<Switch
-      onValueChange = {()=>this.setState({
-              seatChecked:!this.state.seatChecked
-            })}
-            value = {this.state.seatChecked}/>
-    <Text style={styles.textStyle}> Seat availability</Text>
-  </View>
-  <View style={styles.rowstyle}>
-<Switch
-      onValueChange = {()=>this.setState({
-              safetyChecked:!this.state.safetyChecked
-            })}
-            value = {this.state.safetyChecked}/>
-    <Text style={styles.textStyle}>Safety and security factors</Text>
-  </View>
-  <View style={styles.rowstyle}>
-    <Text style={styles.inputtextStyle}>Others:</Text>
-<TextInput style={{width:200}}
-value={this.state.otherResons}
-onChangeText={(text) => this.setState({otherResons:text})}
-/>
-  </View>
-
- <Text style={styles.headingStyle}> Commuting Information/Regular Trip information</Text>
+      <Text style={styles.headingStyle}> Commuting Information/Regular Trip information</Text>
  <View style={styles.rowstyle}>
     <Text style={styles.inputtextStyle}>Home/Origin:</Text>
     <TouchableOpacity style={StyleSheet.inputStyle}
@@ -699,6 +638,8 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   radioButtons={this.state.privateData} 
   onPress={(data)=>this.setState({
      privateData:data
+     
+
    })} />
 </View>
 
@@ -729,7 +670,98 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   onPress={(data)=>this.setState({
      publicData:data
    })} />
-</View>
+</View>    
+      <Text style={styles.headingStyle}> Have you used metro for your daily commute earlier?</Text>
+  <RadioGroup  
+  flexDirection='row'
+  radioButtons={this.state.dailyCommutedata} 
+  onPress={(data)=>this.setState({
+     dailyCommutedata:data
+   })} />
+<Text style={styles.headingStyle}>Reasons for not using metro?</Text>
+<View style={styles.rowstyle}>
+
+<Switch
+      onValueChange = {()=>this.setState({
+              routeChecked:!this.state.routeChecked
+            })}
+            value = {this.state.routeChecked}/>
+    <Text style={styles.textStyle}> My Route doesn't match with Metro Line</Text>
+  </View>
+  <View style={styles.rowstyle}>
+<Switch
+      onValueChange = {()=>this.setState({
+              servicesChecked:!this.state.servicesChecked
+            })}
+            value = {this.state.servicesChecked}/>
+    <Text style={styles.textStyle}> Lack of any good services to/from metro station</Text>
+  </View>
+  <View style={styles.rowstyle}>
+<Switch
+      onValueChange = {()=>this.setState({
+              travelTimechecked:!this.state.travelTimechecked
+            })}
+            value = {this.state.travelTimechecked}/>
+    <Text style={styles.textStyle}> Travel time is higher</Text>
+  </View>
+  <View style={styles.rowstyle}>
+<Switch
+      onValueChange = {()=>this.setState({
+              faresChecked:!this.state.faresChecked
+            })}
+            value = {this.state.faresChecked}/>
+    <Text style={styles.textStyle}> Metro fares are unaffordable for me</Text>
+  </View>
+  <View style={styles.rowstyle}>
+<Switch
+      onValueChange = {()=>this.setState({
+              reachingMetroChecked:!this.state.reachingMetroChecked
+            })}
+            value = {this.state.reachingMetroChecked}/>
+    <Text style={styles.textStyle}> Cost of reaching metro station is high</Text>
+  </View>
+  <View style={styles.rowstyle}>
+<Switch
+      onValueChange = {()=>this.setState({
+              transferChecked:!this.state.transferChecked
+            })}
+            value = {this.state.transferChecked}/>
+    <Text style={styles.textStyle}> High number of transfers/ mode changes</Text>
+  </View>
+  <View style={styles.rowstyle}>
+<Switch
+      onValueChange = {()=>this.setState({
+              crowdChecked:!this.state.crowdChecked
+            })}
+            value = {this.state.crowdChecked}/>
+    <Text style={styles.textStyle}> Metro coaches are crowded</Text>
+  </View>
+  <View style={styles.rowstyle}>
+<Switch
+      onValueChange = {()=>this.setState({
+              seatChecked:!this.state.seatChecked
+            })}
+            value = {this.state.seatChecked}/>
+    <Text style={styles.textStyle}> Seat availability</Text>
+  </View>
+  <View style={styles.rowstyle}>
+<Switch
+      onValueChange = {()=>this.setState({
+              safetyChecked:!this.state.safetyChecked
+            })}
+            value = {this.state.safetyChecked}/>
+    <Text style={styles.textStyle}>Safety and security factors</Text>
+  </View>
+  <View style={styles.rowstyle}>
+    <Text style={styles.inputtextStyle}>Others:</Text>
+<TextInput style={{width:200}}
+value={this.state.otherResons}
+onChangeText={(text) => this.setState({otherResons:text})}
+/>
+  </View>
+
+
+
   {/* <View style={styles.rowstyle}> */}
   {/* <Text style={styles.headingStyle}>{this.state.travelMode}</Text> */}
   {/* <Picker
@@ -749,7 +781,10 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   {/* </View> */}
   <Text style={styles.headingStyle}>What is the purpose of your commute/ regular trip?</Text>
 <View style={styles.rowstyle}>
-  <Picker
+<RadioGroup radioButtons={this.state.purposeTripData} onPress={(data)=>this.setState({
+     purposeTripData:data
+   })} />
+  {/* <Picker
    selectedValue={this.state.travelPurpose}
   style={{  width: 200,marginLeft:110 ,marginTop:10}}
   onValueChange={(itemValue, itemIndex) => this.setState({travelPurpose: itemValue}
@@ -759,7 +794,7 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   <Picker.Item label="Educational" value="educational" />
   <Picker.Item label="Others" value="others" />
   
-</Picker>
+</Picker> */}
 
   </View>
   <Text style={styles.headingStyle}> What is your experience with current mode of commute/ regular trip?</Text>
@@ -808,6 +843,8 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   <Picker.Item label="2" value="2" />
   <Picker.Item label="3" value="3" />
   <Picker.Item label="4" value="4" />
+  <Picker.Item label="more" value="more" />
+  
   
 </Picker>
   </View>
@@ -825,6 +862,7 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   <Picker.Item label="2" value="2" />
   <Picker.Item label="3" value="3" />
   <Picker.Item label="4" value="4" />
+  <Picker.Item label="more" value="more" />
   
 </Picker>
 
@@ -844,6 +882,8 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
   <Picker.Item label="2" value="2" />
   <Picker.Item label="3" value="3" />
   <Picker.Item label="4" value="4" />
+  <Picker.Item label="more" value="more" />
+  
   
 </Picker>
 
@@ -1034,9 +1074,18 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
     positiveButton={{
         title: "OK",
         onPress:()=>{
+       
+          let travelTransportToSend=""
           console.log("selectedorigin",this.state.selectedoriginlat,this.state.selectedoriginlong)
           console.log("selecteddestination",this.state.selecteddestinationlat,this.state.selecteddestinationlong)
-          
+          if(this.state.travelMode=="Private")
+          travelTransportToSend=privateDataButton
+          else if(this.state.travelMode=="public")
+          travelTransportToSend=publicDataButton
+          else if(this.state.travelMode=="shared")
+          travelTransportToSend=sharedDataButton
+          else 
+          travelTransportToSend=autoDataButton
           if(this.props._id=="")
           {
             alert("Start Survey Again");
@@ -1087,9 +1136,9 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
                 },
                 modeOfTravel:{
                   travelType:this.state.travelMode,
-                  travelTrasport:""
+                  travelTrasport:travelTransportToSend
                 },
-                purposeTrip4:this.state.travelPurpose,
+                purposeTrip4:purposeTripDataButton,
                 commuteTrip:{
                   travelTime:"Travel Time",
                   opinionTrasport:travelTimeDataButton
