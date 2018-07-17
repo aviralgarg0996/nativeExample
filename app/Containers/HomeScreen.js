@@ -89,6 +89,7 @@ class HomeScreen extends Component {
     travelTransport:"",
     reasonsDataVisible:true,
     reasonToLeaveVisible:false,
+    reasonForLeavingMetro:"",
     travelTimeData: [
       {
         label: 'Saves lot of time',
@@ -584,13 +585,11 @@ onChangeText={(text) => this.setState({timeTaken:text})}/>
 
    })} />
    <View style={{display:this.state.reasonToLeaveVisible?"flex":"none"}}>
-   <Text style={styles.headingStyle}>When did you leave the metro system for your regular trips?</Text>
-
-  <RadioGroup  
-  radioButtons={this.state.leaveMetroSystemData} 
-  onPress={(data)=>this.setState({
-     leaveMetroSystemData:data
-   })} />
+    <Text style={styles.headingStyle}>what is the reason for leaving the metro?</Text>
+    <TextInput style={styles.inputStyle}
+value={this.state.reasonForLeavingMetro}
+onChangeText={(text) => this.setState({reasonForLeavingMetro:text})}/>
+  
 </View>
    <View style={{display:this.state.reasonsDataVisible?"flex":"none"}}>
 <Text style={styles.headingStyle}>Reasons for not using metro?</Text>
@@ -675,6 +674,15 @@ onChangeText={(text) => this.setState({otherResons:text})}
 />
   </View>
 </View>
+<View>
+ <Text style={styles.headingStyle}>When did you leave the metro system for your regular trips?</Text>
+
+  <RadioGroup  
+  radioButtons={this.state.leaveMetroSystemData} 
+  onPress={(data)=>this.setState({
+     leaveMetroSystemData:data
+   })} />
+   </View>
 <View style={styles.rowstyle}>
   <Text style={styles.headingStyle}>Mode of Travel</Text>
   <Picker
@@ -1094,10 +1102,7 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
               this.setState({
                 submitBtnVisible:true
               })
-            let  leaveMetroSystemDataButtonData="";
-            if(this.state.reasonToLeaveVisible)
-            leaveMetroSystemDataButtonData=leaveMetroSystemDataButton
-            let headers={
+           let headers={
               'Authorization':'Bearer '+this.state.token,
               'Accept': 'application/json',
             }
@@ -1181,7 +1186,8 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
                 },
                willingness10:metroUseButton,
                parkingFees:this.state.parkingFees,
-               stations:leaveMetroSystemDataButtonData
+               stations:leaveMetroSystemDataButton,
+               reasonForLeavingMetro:this.state.reasonForLeavingMetro
                },
               headers:headers
               }
