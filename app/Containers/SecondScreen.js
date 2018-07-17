@@ -182,7 +182,7 @@ flex:1
                   })
                     .then(response => {
                         console.log("responsinseccccccccce",response,this.props.token)
-                        this.props.navigator.push({
+                        this.props.navigator.resetTo({
                           screen: 'HomeScreen',
                           title: 'Survey',
                           passProps:{

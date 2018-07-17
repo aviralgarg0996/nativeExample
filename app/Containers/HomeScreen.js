@@ -74,6 +74,7 @@ class HomeScreen extends Component {
     age:"",
     gender:"",
     mobile:"",
+    submitBtnVisible:false,
     privateVisible:'flex',
     autoVisible:'none',
     sharedvisible:'none',
@@ -86,6 +87,8 @@ class HomeScreen extends Component {
     selecteddestinationlat:"",
     selecteddestinationlong:"",
     travelTransport:"",
+    reasonsDataVisible:true,
+    reasonToLeaveVisible:false,
     travelTimeData: [
       {
         label: 'Saves lot of time',
@@ -418,6 +421,20 @@ class HomeScreen extends Component {
         color:'green',
       }, 
     ],
+    leaveMetroSystemData:[
+      {
+        label: 'Before second fare hike? ( Oct 2017)',
+        value:'Before second fare hike? ( Oct 2017)',
+        size: 30,
+        color:'green',
+      },
+      {
+        label: 'After second fare hike? ( Oct 2017)',
+        value:'After second fare hike? ( Oct 2017)',
+        size: 30,
+        color:'green',
+      },
+    ],
 
 
   }
@@ -453,7 +470,9 @@ class HomeScreen extends Component {
         publicDataButton = publicDataButton ? publicDataButton.value : this.state.publicData[0].label;
     let purposeTripDataButton = this.state.purposeTripData.find(e => e.selected == true);
         purposeTripDataButton = purposeTripDataButton ? purposeTripDataButton.value : this.state.purposeTripData[0].label;
-  
+    let leaveMetroSystemDataButton = this.state.leaveMetroSystemData.find(e => e.selected == true);
+        leaveMetroSystemDataButton = leaveMetroSystemDataButton ? leaveMetroSystemDataButton.value : this.state.leaveMetroSystemData[0].label;
+   
           
       
         console.log("valueinconsole",this.state.token);
@@ -552,132 +571,28 @@ value={this.state.timeTaken}
 keyboardType='numeric'
 onChangeText={(text) => this.setState({timeTaken:text})}/>
   </View>
-  <View style={styles.rowstyle}>
-  <Text style={styles.headingStyle}>Mode of Travel</Text>
-  <Picker
-   selectedValue={this.state.travelMode}
-  style={{  width: 200,marginLeft:20 ,marginTop:10}}
-  onValueChange={
-    (itemValue, itemIndex) => {
-      if(itemValue=='public')
-      this.setState({
-        travelMode: itemValue,
-        nonpublicvisible:'none',
-        publictransportvisible:'flex',
-        publicVisible:'flex',
-        privateVisible:'none',
-        sharedvisible:'none',
-        autoVisible:'none'
-      })
-      else if(itemValue=="Private")
-      {
-        this.setState({
-          travelMode:itemValue,
-          privateVisible:'flex',
-          sharedvisible:'none',
-        autoVisible:'none',
-        publicVisible:'none',
-        publictransportvisible:'none',
-        nonpublicvisible:'flex'
-        })
-      }
-      else if(itemValue=="taxi")
-      {
-        this.setState({
-          travelMode:itemValue,
-          privateVisible:'none',
-          sharedvisible:'none',
-        autoVisible:'flex',
-        publicVisible:'none',
-        publictransportvisible:'none',
-        nonpublicvisible:'flex'
-        })
-      }
-      else
-      {
-        this.setState({
-          travelMode:itemValue,
-          privateVisible:'none',
-          sharedvisible:'flex',
-        autoVisible:'none',
-        publicVisible:'none',
-        publictransportvisible:'none',
-        nonpublicvisible:'flex'
-        })
-      }
-    }
-    
-    
-  //   itemValue=="public"?this.setState(
-  //     {
-  //       travelMode: itemValue,
-  //       nonpublicvisible:'none',
-  //       publictransportvisible:'flex',
-  //       publicVisible:'flex'
-  //     }
-  // ):this.setState( 
-  //   {travelMode: itemValue,
-  //   publictransportvisible:'none',
-  //   nonpublicvisible:'flex'
-  //   }
-  // )
-}
-  >
-  <Picker.Item label="Private" value="Private" />
-  <Picker.Item label="Auto/Taxi" value="taxi" />
-  <Picker.Item label="Shared" value="shared" />
-  <Picker.Item label="Public Transport" value="public" />
-  
-</Picker>
-
-  </View>
-  <View style={{display:this.state.privateVisible}}>
-<Text style={styles.headingStyle}>Private:</Text>
-  <RadioGroup  
-  
-  radioButtons={this.state.privateData} 
-  onPress={(data)=>this.setState({
-     privateData:data
-     
-
-   })} />
-</View>
 
 
-<View style={{display:this.state.autoVisible}}>
-<Text style={styles.headingStyle}>Auto/Taxi:</Text>
-  <RadioGroup  
-  
-  radioButtons={this.state.autoData} 
-  onPress={(data)=>this.setState({
-     autoData:data
-   })} />
-</View>
-<View style={{display:this.state.sharedvisible}}>
-<Text style={styles.headingStyle}>Shared:</Text>
-  <RadioGroup  
-  
-  radioButtons={this.state.sharedData} 
-  onPress={(data)=>this.setState({
-     sharedData:data
-   })} />
-</View>
-<View style={{display:this.state.publicVisible}}>
-<Text style={styles.headingStyle}>Public:</Text>
-  <RadioGroup  
-  
-  radioButtons={this.state.publicData} 
-  onPress={(data)=>this.setState({
-     publicData:data
-   })} />
-</View>    
-      <Text style={styles.headingStyle}> Have you used metro for your daily commute earlier?</Text>
+      <Text style={styles.headingStyle}>  Have you ever used metro for your regular trips to office/work/education purposes?</Text>
   <RadioGroup  
   flexDirection='row'
   radioButtons={this.state.dailyCommutedata} 
   onPress={(data)=>this.setState({
-     dailyCommutedata:data
+     dailyCommutedata:data,
+     reasonsDataVisible:!this.state.reasonsDataVisible,
+     reasonToLeaveVisible:!this.state.reasonToLeaveVisible
+
    })} />
+   <View style={{display:this.state.reasonToLeaveVisible?"flex":"none"}}>
+   <Text style={styles.headingStyle}>When did you leave the metro system for your regular trips?</Text>
+
+  <RadioGroup  
+  radioButtons={this.state.leaveMetroSystemData} 
+  onPress={(data)=>this.setState({
+     leaveMetroSystemData:data
+   })} />
+</View>
+   <View style={{display:this.state.reasonsDataVisible?"flex":"none"}}>
 <Text style={styles.headingStyle}>Reasons for not using metro?</Text>
 <View style={styles.rowstyle}>
 
@@ -759,42 +674,119 @@ value={this.state.otherResons}
 onChangeText={(text) => this.setState({otherResons:text})}
 />
   </View>
-
-
-
-  {/* <View style={styles.rowstyle}> */}
-  {/* <Text style={styles.headingStyle}>{this.state.travelMode}</Text> */}
-  {/* <Picker
-  display={this.state.travelMode==""?'none':'flex'}
-  //  selectedValue={this.state.travelMode}
+</View>
+<View style={styles.rowstyle}>
+  <Text style={styles.headingStyle}>Mode of Travel</Text>
+  <Picker
+   selectedValue={this.state.travelMode}
   style={{  width: 200,marginLeft:20 ,marginTop:10}}
-  // onValueChange={(itemValue, itemIndex) => this.setState({travelMode: itemValue}
-  // )}
+  onValueChange={
+    (itemValue, itemIndex) => {
+      if(itemValue=='public')
+      this.setState({
+        travelMode: itemValue,
+        nonpublicvisible:'none',
+        publictransportvisible:'flex',
+        publicVisible:'flex',
+        privateVisible:'none',
+        sharedvisible:'none',
+        autoVisible:'none'
+      })
+      else if(itemValue=="Private")
+      {
+        this.setState({
+          travelMode:itemValue,
+          privateVisible:'flex',
+          sharedvisible:'none',
+        autoVisible:'none',
+        publicVisible:'none',
+        publictransportvisible:'none',
+        nonpublicvisible:'flex'
+        })
+      }
+      else if(itemValue=="taxi")
+      {
+        this.setState({
+          travelMode:itemValue,
+          privateVisible:'none',
+          sharedvisible:'none',
+        autoVisible:'flex',
+        publicVisible:'none',
+        publictransportvisible:'none',
+        nonpublicvisible:'flex'
+        })
+      }
+      else
+      {
+        this.setState({
+          travelMode:itemValue,
+          privateVisible:'none',
+          sharedvisible:'flex',
+        autoVisible:'none',
+        publicVisible:'none',
+        publictransportvisible:'none',
+        nonpublicvisible:'flex'
+        })
+      }
+    }
+    
+}
   >
-  {services} */}
-  {/* <Picker.Item label="Private" value="Private" />
+  <Picker.Item label="Private" value="Private" />
   <Picker.Item label="Auto/Taxi" value="taxi" />
   <Picker.Item label="Shared" value="shared" />
   <Picker.Item label="Public Transport" value="public" />
-   */}
-{/* </Picker> */}
-  {/* </View> */}
+  
+</Picker>
+
+  </View>
+  <View style={{display:this.state.privateVisible}}>
+<Text style={styles.headingStyle}>Private:</Text>
+  <RadioGroup  
+  
+  radioButtons={this.state.privateData} 
+  onPress={(data)=>this.setState({
+     privateData:data
+     
+
+   })} />
+</View>
+
+
+<View style={{display:this.state.autoVisible}}>
+<Text style={styles.headingStyle}>Auto/Taxi:</Text>
+  <RadioGroup  
+  
+  radioButtons={this.state.autoData} 
+  onPress={(data)=>this.setState({
+     autoData:data
+   })} />
+</View>
+<View style={{display:this.state.sharedvisible}}>
+<Text style={styles.headingStyle}>Shared:</Text>
+  <RadioGroup  
+  
+  radioButtons={this.state.sharedData} 
+  onPress={(data)=>this.setState({
+     sharedData:data
+   })} />
+</View>
+<View style={{display:this.state.publicVisible}}>
+<Text style={styles.headingStyle}>Public:</Text>
+  <RadioGroup  
+  radioButtons={this.state.publicData} 
+  onPress={(data)=>this.setState({
+     publicData:data
+   })} />
+</View>   
+
   <Text style={styles.headingStyle}>What is the purpose of your commute/ regular trip?</Text>
 <View style={styles.rowstyle}>
-<RadioGroup radioButtons={this.state.purposeTripData} onPress={(data)=>this.setState({
+<RadioGroup 
+ flexDirection='row'
+radioButtons={this.state.purposeTripData} onPress={(data)=>this.setState({
      purposeTripData:data
    })} />
-  {/* <Picker
-   selectedValue={this.state.travelPurpose}
-  style={{  width: 200,marginLeft:110 ,marginTop:10}}
-  onValueChange={(itemValue, itemIndex) => this.setState({travelPurpose: itemValue}
-  )}
-  >
-  <Picker.Item label="Work" value="Work" />
-  <Picker.Item label="Educational" value="educational" />
-  <Picker.Item label="Others" value="others" />
-  
-</Picker> */}
 
   </View>
   <Text style={styles.headingStyle}> What is your experience with current mode of commute/ regular trip?</Text>
@@ -1073,6 +1065,7 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
     onTouchOutside={() => this.setState({dialogVisible: false})}
     positiveButton={{
         title: "OK",
+        disabled:this.state.submitBtnVisible,
         onPress:()=>{
        
           let travelTransportToSend=""
@@ -1098,6 +1091,12 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
           else if(this.state.startTime=="Enter Start Time")
           alert("Enter Start time");
            else{
+              this.setState({
+                submitBtnVisible:true
+              })
+            let  leaveMetroSystemDataButtonData="";
+            if(this.state.reasonToLeaveVisible)
+            leaveMetroSystemDataButtonData=leaveMetroSystemDataButton
             let headers={
               'Authorization':'Bearer '+this.state.token,
               'Accept': 'application/json',
@@ -1182,6 +1181,7 @@ which is accessible, affordable, safe and comfortable is provided,</Text>
                 },
                willingness10:metroUseButton,
                parkingFees:this.state.parkingFees,
+               stations:leaveMetroSystemDataButtonData
                },
               headers:headers
               }

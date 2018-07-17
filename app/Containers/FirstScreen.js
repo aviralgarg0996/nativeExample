@@ -68,7 +68,7 @@ class FirstScreen extends Component {
                               })
                                 .then(response => {
                                     console.log("response",response)
-                                    this.props.navigator.push({
+                                    this.props.navigator.resetTo({
                                         screen: 'example.SecondScreen',
                                         title: 'User Details',
                                         passProps:{

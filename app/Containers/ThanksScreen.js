@@ -14,8 +14,10 @@ class ThanksScreen extends Component {
               source={require('../images/logo.png') }
             />
            <Text style={{fontSize:30}}>Thanks for Completing Survey</Text>
+           <View style={{display:"flex"}}>
+           <View style={{display:"flex"}}>
             <Button 
-            style={{width:300,marginBottom:30}}
+            style={{width:500,marginBottom:30,padding:30}}
                     onPress={()=>{
                        
                             this.props.navigator.push({
@@ -30,9 +32,24 @@ class ThanksScreen extends Component {
                      
                     }}
                     title="Start Survey Again"
+                /></View>
+                <View style={{display:"flex",marginTop:20}}>
+                <Button 
+            style={{width:400,marginTop:60,marginBottom:50}}
+                    onPress={()=>{
+                            this.props.navigator.resetTo({
+                                            screen: 'example.FirstScreen',
+                                            title: 'Login',
+                                          });
+                    
+                        
+                     
+                    }}
+                    title="Logout"
                 /> 
+                </View>
                        </View>
-          
+          </View>
         );
     }
 }
@@ -45,7 +62,6 @@ const styles = StyleSheet.create({
     
     },
         logo:{
-            
             width:120,
             height:120,
             marginBottom:30
