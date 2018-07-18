@@ -87,8 +87,8 @@ class HomeScreen extends Component {
     selecteddestinationlat:"",
     selecteddestinationlong:"",
     travelTransport:"",
-    reasonsDataVisible:true,
-    reasonToLeaveVisible:false,
+    reasonsDataVisible:false,
+    reasonToLeaveVisible:true,
     reasonForLeavingMetro:"",
     travelTimeData: [
       {
